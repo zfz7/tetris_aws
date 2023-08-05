@@ -1,12 +1,12 @@
 $version: "2"
-namespace com.jerichorun
+namespace com.tetris
 
 use aws.protocols#restJson1
 
 @title("A Sample Hello World API")
 
 @restJson1
-service JerichoRun {
+service Tetris {
     version: "1.0"
     operations: [SayHello]
 }

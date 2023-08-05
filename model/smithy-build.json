@@ -2,7 +2,7 @@
   "version": "1.0",
   "plugins": {
     "openapi": {
-      "service": "com.jerichorun#JerichoRun",
+      "service": "com.tetris#Tetris",
       "protocol": "aws.protocols#restJson1"
     }
   }

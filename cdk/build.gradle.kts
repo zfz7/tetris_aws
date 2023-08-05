@@ -26,6 +26,7 @@ tasks.register<YarnTask>("test") {
 
 tasks.register<YarnTask>("build") {
     dependsOn(install)
+    dependsOn(":backend:build",":frontend:build")
     mustRunAfter("test")
     inputs.dir(file("$projectDir"))
     outputs.dir(file("$projectDir/build"))
@@ -33,7 +34,7 @@ tasks.register<YarnTask>("build") {
 }
 
 tasks.register<YarnTask>("deploy") {
-    dependsOn("build")
+    dependsOn(":build")
     args.set(listOf("deploy"))
 }
 
