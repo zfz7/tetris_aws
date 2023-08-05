@@ -1,5 +1,6 @@
 package com.backend
 
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 
@@ -7,6 +8,6 @@ class LambdaMainTest {
     @Test
     fun handRequest() {
         val mainClass = LambdaMain()
-        assertNotNull(mainClass.handleRequest(emptyMap(), null))
+        assertNotNull(mainClass.handleRequest(APIGatewayProxyRequestEvent(), null))
     }
 }

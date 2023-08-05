@@ -26,19 +26,19 @@ export class ServiceStack extends Stack {
       }),
     );
 
-    // const apiGatewayRole = getApiGatewayRole(this, `Backend-${props.stageName}-ApiExecutionRole`, lambda);
-    //
-    // const api = new SpecRestApi(this, 'Backend-Apigateway', {
-    //   restApiName: 'Backend-Api',
-    //   description: 'Backend-Api',
-    //   apiDefinition: ApiDefinition.fromInline(
-    //     getOpenApiDefinition(lambda.functionArn, props.env!.region!, apiGatewayRole),
-    //   ),
-    //   deploy: true,
-    //   deployOptions: {
-    //     stageName: props.stageName,
-    //   },
-    // });
+    const apiGatewayRole = getApiGatewayRole(this, `Backend-${props.stageName}-ApiExecutionRole`, lambda);
+
+    const api = new SpecRestApi(this, 'Backend-Apigateway', {
+      restApiName: 'Backend-Api',
+      description: 'Backend-Api',
+      apiDefinition: ApiDefinition.fromInline(
+        getOpenApiDefinition(lambda.functionArn, props.env!.region!, apiGatewayRole),
+      ),
+      deploy: true,
+      deployOptions: {
+        stageName: props.stageName,
+      },
+    });
   }
 }
 

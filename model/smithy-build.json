@@ -3,7 +3,10 @@
   "plugins": {
     "openapi": {
       "service": "com.tetris#Tetris",
-      "protocol": "aws.protocols#restJson1"
+      "jsonContentType": "application/x-amz-json-1.1",
+      "defaultBlobFormat": "binary",
+      "disableCloudFormationSubstitution": true,
+      "apiGatewayType": "REST"
     }
   }
 }
