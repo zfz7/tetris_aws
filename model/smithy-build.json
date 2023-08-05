@@ -1,0 +1,9 @@
+{
+  "version": "1.0",
+  "plugins": {
+    "openapi": {
+      "service": "com.jerichorun#JerichoRun",
+      "protocol": "aws.protocols#restJson1"
+    }
+  }
+}
