@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import logo from './logo.svg';
 import './App.css';
-import {SayHelloInput} from 'tetris-ts-client'
+import {SayHelloInput} from 'ts-client'
 
 function App() {
   const [sayHello, setSayHello] = useState<SayHelloInput>({name:"hi"});
