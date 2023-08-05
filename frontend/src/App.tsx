@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {useState} from 'react';
 import logo from './logo.svg';
 import './App.css';
+import {SayHelloInput} from 'tetris-ts-client'
 
 function App() {
+  const [sayHello, setSayHello] = useState<SayHelloInput>({name:"hi"});
   return (
     <div className="App">
       <header className="App-header">
@@ -18,6 +20,8 @@ function App() {
         >
           Learn React
         </a>
+        <div>{sayHello.name}</div>
+        <button onClick={()=> setSayHello({name:sayHello.name+"a"})}>click me</button>
       </header>
     </div>
   );

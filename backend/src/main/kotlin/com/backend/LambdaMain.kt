@@ -10,6 +10,7 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 class LambdaMain : RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
     override fun handleRequest(input: APIGatewayProxyRequestEvent, context: Context?): APIGatewayProxyResponseEvent {
         context?.logger?.log("input $input ${context}")
+        context?.logger?.log(input.requestContext.operationName)
         return APIGatewayProxyResponseEvent()
     }
 }

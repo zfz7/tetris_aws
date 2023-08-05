@@ -7,6 +7,15 @@
       "defaultBlobFormat": "binary",
       "disableCloudFormationSubstitution": true,
       "apiGatewayType": "REST"
+    },
+    "typescript-codegen": {
+      "service": "com.tetris#Tetris",
+      "targetNamespace": "Tetris",
+      "package": "tetris-ts-client",
+      "packageVersion": "0.0.1",
+      "packageJson": {
+        "license": "Apache-2.0"
+      }
     }
   }
 }

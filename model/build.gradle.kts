@@ -10,14 +10,19 @@ repositories {
 dependencies {
     implementation("software.amazon.smithy:smithy-aws-traits:1.35.0")
     implementation("software.amazon.smithy:smithy-aws-apigateway-traits:1.35.0")
+    implementation("software.amazon.smithy.typescript:smithy-typescript-codegen:0.17.1")
 }
 
 buildscript {
+    repositories {
+        mavenCentral()
+    }
     dependencies {
         classpath("software.amazon.smithy:smithy-openapi:1.35.0")
         classpath("software.amazon.smithy:smithy-model:1.35.0")
         classpath("software.amazon.smithy:smithy-aws-traits:1.35.0")
         classpath("software.amazon.smithy:smithy-aws-apigateway-openapi:1.35.0")
+        classpath("software.amazon.smithy:smithy-cli:1.35.0")
     }
 }
 

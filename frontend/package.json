@@ -10,15 +10,18 @@
     "@types/node": "^16.7.13",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
+    "prettier": "^3.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
+    "tetris-ts-client": "link:./../model/build/smithyprojections/model/source/typescript-codegen",
     "typescript": "^4.4.2",
     "web-vitals": "^2.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "format && react-scripts build",
+    "buildTetris": "cd ./../model/build/smithyprojections/model/source/typescript-codegen && yarn && yarn build && cd -",
+    "build": "yarn format && yarn buildTetris && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "format": "prettier --write 'src/**/*.ts'"

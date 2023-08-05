@@ -6,6 +6,7 @@ Fullstack serverless template: Backend: Kotlin/Smithy/Lambda/APIGateway, Fronten
 ```
 #Yarn
 brew install yarn
+yarn global add concurrently
 #Gradle
 brew install gradle
 #AWS cli
