@@ -21,3 +21,8 @@ tasks.register("build") {
     dependsOn("backend:build")
     dependsOn("frontend:build")
 }
+
+tasks.register("deploy") {
+    dependsOn("build")
+    dependsOn("cdk:deploy")
+}

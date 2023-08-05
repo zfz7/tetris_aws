@@ -32,6 +32,10 @@ tasks.register<YarnTask>("build") {
     args.set(listOf("build"))
 }
 
+tasks.register<YarnTask>("deploy") {
+    dependsOn("build")
+    args.set(listOf("deploy"))
+}
 
 task<Delete>("clean") {
     delete(project(":cdk").buildDir)
