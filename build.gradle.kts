@@ -18,10 +18,17 @@ repositories {
 tasks.register("build") {
     dependsOn("model:build")
     dependsOn("cdk:build")
+    dependsOn("tsclient:build")
     dependsOn("backend:build")
     dependsOn("frontend:build")
 }
-
+tasks.register("clean") {
+    dependsOn("model:clean")
+    dependsOn("cdk:clean")
+    dependsOn("tsclient:clean")
+    dependsOn("backend:clean")
+    dependsOn("frontend:clean")
+}
 tasks.register("deploy") {
     dependsOn("build")
     dependsOn("cdk:deploy")

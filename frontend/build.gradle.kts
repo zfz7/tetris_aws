@@ -26,7 +26,7 @@ tasks.register<YarnTask>("test") {
 
 tasks.register<YarnTask>("build") {
     dependsOn(install)
-    dependsOn(":model:build")
+    dependsOn(":tsclient:build")
     mustRunAfter("test")
     inputs.dir(file("$projectDir/src"))
     outputs.dir(file("$projectDir/build"))

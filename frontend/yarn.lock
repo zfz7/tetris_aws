@@ -9034,7 +9034,7 @@ test-exclude@^6.0.0:
     glob "^7.1.4"
     minimatch "^3.0.4"
 
-"tetris-ts-client@link:../model/build/smithyprojections/model/source/typescript-codegen":
+"tetris-ts-client@link:../tsclient":
   version "0.0.0"
   uid ""
 

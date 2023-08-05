@@ -12,10 +12,17 @@ configure<NodeExtension> {
 }
 
 val install = tasks.register<YarnTask>("install") {
+    dependsOn("copy_client_from_model")
     inputs.file(file("$projectDir/yarn.lock"))
     inputs.file(file("$projectDir/package.json"))
     outputs.dir(file("$projectDir/node_modules"))
     args.set(listOf("install"))
+}
+
+tasks.register<Copy>("copy_client_from_model") {
+    dependsOn(":model:build")
+    from(file("${project(":model").projectDir}/build/smithyprojections/model/source/typescript-codegen"))
+    into(file("$projectDir"))
 }
 
 tasks.register<YarnTask>("test") {
@@ -26,19 +33,15 @@ tasks.register<YarnTask>("test") {
 
 tasks.register<YarnTask>("build") {
     dependsOn(install)
-    dependsOn(":backend:build", ":frontend:build")
     mustRunAfter("test")
     inputs.dir(file("$projectDir"))
     outputs.dir(file("$projectDir/build"))
     args.set(listOf("build"))
 }
 
-tasks.register<YarnTask>("deploy") {
-    dependsOn(":build")
-    args.set(listOf("deploy"))
-}
 
 task<Delete>("clean") {
-    delete(project(":cdk").buildDir)
-    delete(files("$projectDir/cdk.out"))
+    delete(fileTree("$projectDir") {
+        exclude("yarn.lock", "build.gradle.kts", "settings.gradle.kts", "/node_modules/**")
+    })
 }
