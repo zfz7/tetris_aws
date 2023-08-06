@@ -1,13 +1,25 @@
 import { Construct } from 'constructs';
 import { Stack, StackProps } from 'aws-cdk-lib';
-import { ApiDefinition, SpecRestApi } from 'aws-cdk-lib/aws-apigateway';
+import {
+  ApiDefinition,
+  BasePathMapping,
+  DomainName,
+  EndpointType,
+  SecurityPolicy,
+  SpecRestApi,
+} from 'aws-cdk-lib/aws-apigateway';
 import { Code, Function, IFunction, Runtime } from 'aws-cdk-lib/aws-lambda';
 import { Effect, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { RegionInfo } from 'aws-cdk-lib/region-info';
 import * as fs from 'fs';
+import { Certificate, CertificateValidation } from 'aws-cdk-lib/aws-certificatemanager';
+import { ARecord, IHostedZone, RecordTarget } from 'aws-cdk-lib/aws-route53';
+import { ApiGatewayDomain } from 'aws-cdk-lib/aws-route53-targets';
 
 export interface ServiceStackProps extends StackProps {
   stageName: string;
+  apiDomainName: string;
+  hostedZone: IHostedZone;
 }
 export class ServiceStack extends Stack {
   constructor(scope: Construct, id: string, props: ServiceStackProps) {
@@ -38,6 +50,29 @@ export class ServiceStack extends Stack {
       deployOptions: {
         stageName: props.stageName,
       },
+      disableExecuteApiEndpoint: true,
+    });
+
+    const domainName = new DomainName(this, `Backend-${props.stageName}-ApiGatwayDomain`, {
+      domainName: props.apiDomainName,
+      endpointType: EndpointType.REGIONAL,
+      securityPolicy: SecurityPolicy.TLS_1_2,
+      certificate: new Certificate(this, `Backend-${props.stageName}-ApiCertificate`, {
+        domainName: props.apiDomainName,
+        validation: CertificateValidation.fromDns(props.hostedZone),
+      }),
+    });
+
+    new BasePathMapping(this, `Backend-${props.stageName}-BasePathMapping`, {
+      domainName: domainName,
+      restApi: api,
+      stage: api.deploymentStage,
+    });
+
+    new ARecord(this, `Backend-${props.stageName}-ApiAliasRecord`, {
+      recordName: props.apiDomainName,
+      target: RecordTarget.fromAlias(new ApiGatewayDomain(domainName)),
+      zone: props.hostedZone,
     });
   }
 }

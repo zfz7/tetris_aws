@@ -13,17 +13,19 @@ stages.forEach(stage => {
         env: {account: stage.account, region: stage.region}
     }
 
-    const hostedZone = new RootHostedZone(app, `DNS-Stack-${stage.name}`, {
+    const rootHostedZone = new RootHostedZone(app, `DNS-Stack-${stage.name}`, {
         ...stackProps
     });
 
     new WebsiteStack(app, `Website-Stack-${stage.name}`, {
-        hostedZone: hostedZone.hostedZone,
-        domainName: hostedZone.hostedZone.zoneName,
+        hostedZone: rootHostedZone.hostedZone,
+        domainName: rootHostedZone.hostedZone.zoneName,
         ...stackProps
     });
 
     new ServiceStack(app, `Service-Stack-${stage.name}`, {
+        apiDomainName: `api.${rootHostedZone.hostedZone.zoneName}`,
+        hostedZone: rootHostedZone.hostedZone,
         stageName: stage.name,
         ...stackProps
     });
