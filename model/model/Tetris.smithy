@@ -38,6 +38,7 @@ operation SayHello {
 }
 
 @error("client")
+@httpError(400)
 structure ApiError {
     @required
     errorMessage: String
