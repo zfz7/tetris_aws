@@ -15,6 +15,7 @@ import * as fs from 'fs';
 import { Certificate, CertificateValidation } from 'aws-cdk-lib/aws-certificatemanager';
 import { ARecord, IHostedZone, RecordTarget } from 'aws-cdk-lib/aws-route53';
 import { ApiGatewayDomain } from 'aws-cdk-lib/aws-route53-targets';
+import { PROJECT } from '../bin/config';
 
 export interface ServiceStackProps extends StackProps {
   stageName: string;
@@ -24,7 +25,7 @@ export interface ServiceStackProps extends StackProps {
 export class ServiceStack extends Stack {
   constructor(scope: Construct, id: string, props: ServiceStackProps) {
     super(scope, id, props);
-    const lambda = new Function(this, 'Backend-Lambda', {
+    const lambda = new Function(this, `${PROJECT}-Api-Lambda`, {
       code: Code.fromAsset('../backend/build/libs/backend-all.jar', { deployTime: true }),
       handler: 'com.backend.LambdaMain',
       runtime: Runtime.JAVA_17,
@@ -38,11 +39,11 @@ export class ServiceStack extends Stack {
       }),
     );
 
-    const apiGatewayRole = getApiGatewayRole(this, `Backend-${props.stageName}-ApiExecutionRole`, lambda);
+    const apiGatewayRole = getApiGatewayRole(this, `${PROJECT}-${props.stageName}-ApiExecutionRole`, lambda);
 
-    const api = new SpecRestApi(this, 'Backend-Apigateway', {
-      restApiName: 'Backend-Api',
-      description: 'Backend-Api',
+    const api = new SpecRestApi(this, `${PROJECT}-Apigateway`, {
+      restApiName: `${PROJECT}-Api`,
+      description: `${PROJECT}-Api`,
       apiDefinition: ApiDefinition.fromInline(
         getOpenApiDefinition(lambda.functionArn, props.env!.region!, apiGatewayRole),
       ),
@@ -53,23 +54,23 @@ export class ServiceStack extends Stack {
       disableExecuteApiEndpoint: true,
     });
 
-    const domainName = new DomainName(this, `Backend-${props.stageName}-ApiGatwayDomain`, {
+    const domainName = new DomainName(this, `${PROJECT}-${props.stageName}-ApiGatewayDomain`, {
       domainName: props.apiDomainName,
       endpointType: EndpointType.REGIONAL,
       securityPolicy: SecurityPolicy.TLS_1_2,
-      certificate: new Certificate(this, `Backend-${props.stageName}-ApiCertificate`, {
+      certificate: new Certificate(this, `${PROJECT}-${props.stageName}-ApiCertificate`, {
         domainName: props.apiDomainName,
         validation: CertificateValidation.fromDns(props.hostedZone),
       }),
     });
 
-    new BasePathMapping(this, `Backend-${props.stageName}-BasePathMapping`, {
+    new BasePathMapping(this, `${PROJECT}-${props.stageName}-BasePathMapping`, {
       domainName: domainName,
       restApi: api,
       stage: api.deploymentStage,
     });
 
-    new ARecord(this, `Backend-${props.stageName}-ApiAliasRecord`, {
+    new ARecord(this, `${PROJECT}-${props.stageName}-ApiAliasRecord`, {
       recordName: props.apiDomainName,
       target: RecordTarget.fromAlias(new ApiGatewayDomain(domainName)),
       zone: props.hostedZone,
