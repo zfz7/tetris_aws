@@ -26,15 +26,23 @@ class LambdaMain : RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyRe
     }
 
     override fun handleRequest(input: APIGatewayProxyRequestEvent, context: Context?): APIGatewayProxyResponseEvent {
+        val baseResponseWithCors = APIGatewayProxyResponseEvent().apply {
+            headers = mapOf(
+                Pair("Access-Control-Allow-Origin", "*"),
+                Pair("Access-Control-Allow-Headers", "*"),
+                Pair("Access-Control-Allow-Methods", "OPTIONS, POST, GET"),
+                Pair("Access-Control-Allow-Credentials", "true")
+            )
+        }
         try {
             val res = when (input.requestContext.operationName) {
                 "SayHello" -> handleSayHello(SayHelloRequest.invoke { name = input.queryStringParameters["name"] })
-                else -> return APIGatewayProxyResponseEvent().apply { statusCode = 404 }
+                else -> return baseResponseWithCors.apply { statusCode = 404 }
             }
-            return APIGatewayProxyResponseEvent().apply { body = gson.toJson(res) }
+            return baseResponseWithCors.apply { body = gson.toJson(res) }
         } catch (e: ApiError) {
             val exceptionGson = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
-            return APIGatewayProxyResponseEvent().apply {
+            return baseResponseWithCors.apply {
                 statusCode = 400; body = exceptionGson.toJson(e, ApiError::class.java)
             }
         }

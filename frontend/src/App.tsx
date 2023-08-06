@@ -1,30 +1,40 @@
 import React, {useState} from 'react';
-import logo from './logo.svg';
 import './App.css';
-import {SayHelloInput} from 'ts-client'
+import {SayHelloInput, SayHelloOutput} from 'ts-client'
 
 function App() {
-  const [sayHello, setSayHello] = useState<SayHelloInput>({name:"hi"});
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <div>{sayHello.name}</div>
-        <button onClick={()=> setSayHello({name:sayHello.name+"a"})}>click me</button>
-      </header>
-    </div>
-  );
+    const [input, setInput] = useState("Enter input:");
+    const [output, setOutput] = useState("");
+
+    return (
+        <div className="App">
+            <header className="App-header">
+                <h1>Tetris template</h1>
+                <div>Send to server:</div>
+                <input onChange={(event) => setInput(event.target.value)}></input>
+                <br/>
+                <button onClick={() =>
+                    sayHelloApi({name: input}).then(
+                        (res) => setOutput(res.message!),
+                        (err) => console.log(err)
+                    )}>
+                    click me
+                </button>
+                <div>Server response</div>
+                <div>{output}</div>
+            </header>
+        </div>
+    );
+}
+
+const sayHelloApi = (input: SayHelloInput): Promise<SayHelloOutput> => {
+    const url = `https://api.${window.location.hostname}/hello`
+    return fetch(`${url}?` + new URLSearchParams({"name": input.name!}), {
+        method: 'GET'
+    }).then(
+        (response) => response.json(),
+        (err) => console.log(err)
+    )
 }
 
 export default App;
