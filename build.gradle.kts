@@ -19,6 +19,7 @@ tasks.register("build") {
     dependsOn("model:build")
     dependsOn("cdk:build")
     dependsOn("tsclient:build")
+    dependsOn("ktclient:build")
     dependsOn("backend:build")
     dependsOn("frontend:build")
 }
@@ -26,6 +27,8 @@ tasks.register("clean") {
     dependsOn("model:clean")
     dependsOn("cdk:clean")
     dependsOn("tsclient:clean")
+    dependsOn("ktclient:clean")
+    dependsOn("ktclient:cleanSrc")
     dependsOn("backend:clean")
     dependsOn("frontend:clean")
 }

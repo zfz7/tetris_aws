@@ -11,6 +11,7 @@ dependencies {
     implementation("software.amazon.smithy:smithy-aws-traits:1.35.0")
     implementation("software.amazon.smithy:smithy-aws-apigateway-traits:1.35.0")
     implementation("software.amazon.smithy.typescript:smithy-typescript-codegen:0.17.1")
+    implementation("software.amazon.smithy.kotlin:smithy-kotlin-codegen:0.24.0")
 }
 
 buildscript {

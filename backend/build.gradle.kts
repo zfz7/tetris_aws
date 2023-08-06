@@ -12,6 +12,8 @@ repositories {
 dependencies {
     implementation("com.amazonaws:aws-lambda-java-events:3.11.2")
     implementation("com.amazonaws:aws-lambda-java-core:1.2.2")
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation(project(":ktclient"))
 
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.2")

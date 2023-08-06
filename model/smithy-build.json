@@ -16,6 +16,13 @@
       "packageJson": {
         "license": "Apache-2.0"
       }
+    },
+    "kotlin-codegen": {
+      "service": "com.tetris#Tetris",
+      "package": {
+        "version": "1.0.0",
+        "name": "com.tetris"
+      }
     }
   }
 }

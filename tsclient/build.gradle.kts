@@ -12,14 +12,14 @@ configure<NodeExtension> {
 }
 
 val install = tasks.register<YarnTask>("install") {
-    dependsOn("copy_client_from_model")
+    dependsOn("copy_ts_client_from_model")
     inputs.file(file("$projectDir/yarn.lock"))
     inputs.file(file("$projectDir/package.json"))
     outputs.dir(file("$projectDir/node_modules"))
     args.set(listOf("install"))
 }
 
-tasks.register<Copy>("copy_client_from_model") {
+tasks.register<Copy>("copy_ts_client_from_model") {
     dependsOn(":model:build")
     from(file("${project(":model").projectDir}/build/smithyprojections/model/source/typescript-codegen"))
     into(file("$projectDir"))
@@ -38,7 +38,6 @@ tasks.register<YarnTask>("build") {
     outputs.dir(file("$projectDir/build"))
     args.set(listOf("build"))
 }
-
 
 task<Delete>("clean") {
     delete(fileTree("$projectDir") {
