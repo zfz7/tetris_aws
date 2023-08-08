@@ -51,28 +51,21 @@ export class ServiceStack extends Stack {
       deployOptions: {
         stageName: props.stageName,
       },
-      disableExecuteApiEndpoint: true,
-    });
-
-    const domainName = new DomainName(this, `${PROJECT}-${props.stageName}-ApiGatewayDomain`, {
-      domainName: props.apiDomainName,
-      endpointType: EndpointType.REGIONAL,
-      securityPolicy: SecurityPolicy.TLS_1_2,
-      certificate: new Certificate(this, `${PROJECT}-${props.stageName}-ApiCertificate`, {
+      domainName: {
         domainName: props.apiDomainName,
-        validation: CertificateValidation.fromDns(props.hostedZone),
-      }),
-    });
-
-    new BasePathMapping(this, `${PROJECT}-${props.stageName}-BasePathMapping`, {
-      domainName: domainName,
-      restApi: api,
-      stage: api.deploymentStage,
+        endpointType: EndpointType.REGIONAL,
+        securityPolicy: SecurityPolicy.TLS_1_2,
+        certificate: new Certificate(this, `${PROJECT}-${props.stageName}-ApiCertificate`, {
+          domainName: props.apiDomainName,
+          validation: CertificateValidation.fromDns(props.hostedZone),
+        }),
+      },
+      disableExecuteApiEndpoint: true,
     });
 
     new ARecord(this, `${PROJECT}-${props.stageName}-ApiAliasRecord`, {
       recordName: props.apiDomainName,
-      target: RecordTarget.fromAlias(new ApiGatewayDomain(domainName)),
+      target: RecordTarget.fromAlias(new ApiGatewayDomain(api.domainName!)),
       zone: props.hostedZone,
     });
   }
