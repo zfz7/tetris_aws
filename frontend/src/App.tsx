@@ -29,9 +29,9 @@ function App() {
             ]}>
             {({signOut, user}) => (
                 <div className="App-header">
-                    <h1>Hello {user?.username}</h1>
-                    <button onClick={signOut}>Sign out</button>
                     <h1>Tetris template</h1>
+                    <h4>Hello {user?.attributes!["given_name"]} {user?.attributes!["family_name"]}</h4>
+                    <button onClick={signOut}>Sign out</button>
                     <div>Send to server:</div>
                     <input onChange={(event) => setInput(event.target.value)}></input>
                     <br/>
