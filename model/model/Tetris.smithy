@@ -31,6 +31,7 @@ use aws.protocols#restJson1
         "${UserPool.Arn}"
     ]
 )
+@cors
 @httpBearerAuth
 service Tetris {
     version: "1.0"
