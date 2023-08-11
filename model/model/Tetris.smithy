@@ -2,6 +2,9 @@ $version: "2.0"
 namespace com.tetris
 
 use aws.api#service
+use aws.apigateway#authorizer
+use aws.apigateway#authorizers
+use aws.auth#cognitoUserPools
 use aws.protocols#restJson1
 
 @title("A Sample Hello World API")
@@ -17,6 +20,18 @@ use aws.protocols#restJson1
     credentials: "${APIGatewayExecutionRole.Arn}"
 )
 @restJson1
+@authorizer("cognito")
+@authorizers(
+    "cognito": {
+        scheme: "aws.auth#cognitoUserPools"
+    }
+)
+@cognitoUserPools(
+    providerArns:[
+        "${UserPool.Arn}"
+    ]
+)
+@httpBearerAuth
 service Tetris {
     version: "1.0"
     operations: [SayHello]

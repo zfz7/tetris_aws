@@ -1,13 +1,6 @@
 import { Construct } from 'constructs';
 import { Stack, StackProps } from 'aws-cdk-lib';
-import {
-  ApiDefinition,
-  BasePathMapping,
-  DomainName,
-  EndpointType,
-  SecurityPolicy,
-  SpecRestApi,
-} from 'aws-cdk-lib/aws-apigateway';
+import { ApiDefinition, EndpointType, SecurityPolicy, SpecRestApi } from 'aws-cdk-lib/aws-apigateway';
 import { Code, Function, IFunction, Runtime } from 'aws-cdk-lib/aws-lambda';
 import { Effect, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { RegionInfo } from 'aws-cdk-lib/region-info';
@@ -20,6 +13,7 @@ import { PROJECT } from '../bin/config';
 export interface ServiceStackProps extends StackProps {
   stageName: string;
   apiDomainName: string;
+  userPoolArn: string;
   hostedZone: IHostedZone;
 }
 export class ServiceStack extends Stack {
@@ -45,7 +39,7 @@ export class ServiceStack extends Stack {
       restApiName: `${PROJECT}-Api`,
       description: `${PROJECT}-Api`,
       apiDefinition: ApiDefinition.fromInline(
-        getOpenApiDefinition(lambda.functionArn, props.env!.region!, apiGatewayRole),
+        getOpenApiDefinition(lambda.functionArn, props.env!.region!, apiGatewayRole, props.userPoolArn),
       ),
       deploy: true,
       deployOptions: {
@@ -88,7 +82,12 @@ function getApiGatewayRole(stack: Stack, roleName: string, lambdaFunction: IFunc
     roleName,
   });
 }
-function getOpenApiDefinition(functionArn: string, region: string, apiGatewayRole: Role): Record<string, unknown> {
+function getOpenApiDefinition(
+  functionArn: string,
+  region: string,
+  apiGatewayRole: Role,
+  userPoolArn: string,
+): Record<string, unknown> {
   const modelPath = `../model/build/smithyprojections/model/source/openapi/Tetris.openapi.json`;
 
   if (!fs.existsSync(modelPath)) {
@@ -104,5 +103,6 @@ function getOpenApiDefinition(functionArn: string, region: string, apiGatewayRol
   modelFile = modelFile.replace(/\${LambdaFunction.Arn}/g, functionArn);
   modelFile = modelFile.replace(/\${APIGatewayExecutionRole.Arn}/g, apiGatewayRole.roleArn);
   modelFile = modelFile.replace(/\${DeployVersion}/g, '1.0.0');
+  modelFile = modelFile.replace(/\${UserPool.Arn}/g, userPoolArn);
   return JSON.parse(modelFile);
 }

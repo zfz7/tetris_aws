@@ -5,6 +5,7 @@ import {PROJECT, stages} from "./config";
 import {RootHostedZone} from "../stacks/root-hosted-zone";
 import {WebsiteStack} from "../stacks/website-stack";
 import {ServiceStack} from "../stacks/service-stack";
+import {CognitoStack} from "../stacks/cogntio-stack";
 
 const app = new App();
 
@@ -17,6 +18,12 @@ stages.forEach(stage => {
         ...stackProps
     });
 
+   const cognitoStack =  new CognitoStack(app, `${PROJECT}-Cognito-Stack-${stage.name}`, {
+        callbackURL: `https://${rootHostedZone.hostedZone.zoneName}`,
+        supportEmail: `no-reply@${rootHostedZone.hostedZone.zoneName}`,
+       ...stackProps
+    })
+
     new WebsiteStack(app, `${PROJECT}-Website-Stack-${stage.name}`, {
         hostedZone: rootHostedZone.hostedZone,
         domainName: rootHostedZone.hostedZone.zoneName,
@@ -27,6 +34,7 @@ stages.forEach(stage => {
         apiDomainName: `api.${rootHostedZone.hostedZone.zoneName}`,
         hostedZone: rootHostedZone.hostedZone,
         stageName: stage.name,
+        userPoolArn: cognitoStack.userPool.userPoolArn,
         ...stackProps
     });
 })
