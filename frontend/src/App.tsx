@@ -2,8 +2,7 @@ import React, {useState} from 'react';
 import './App.css';
 import {SayHelloInput, SayHelloOutput} from 'ts-client'
 import {Amplify} from 'aws-amplify';
-import type {WithAuthenticatorProps} from '@aws-amplify/ui-react';
-import {withAuthenticator} from '@aws-amplify/ui-react';
+import {Authenticator} from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 
 Amplify.configure({
@@ -15,30 +14,39 @@ Amplify.configure({
     }
 });
 
-function App({signOut, user}: WithAuthenticatorProps) {
+function App() {
     const [input, setInput] = useState("Enter input:");
     const [output, setOutput] = useState("");
 
     return (
-        <div className="App">
-            <header className="App-header">
-                <h1>Hello {user?.username}</h1>
-                <button onClick={signOut}>Sign out</button>
-                <h1>Tetris template</h1>
-                <div>Send to server:</div>
-                <input onChange={(event) => setInput(event.target.value)}></input>
-                <br/>
-                <button onClick={() =>
-                    sayHelloApi({name: input}, user?.getSignInUserSession()?.getIdToken()?.getJwtToken()!).then(
-                        (res) => setOutput(res.message!),
-                        (err) => console.log(err)
-                    )}>
-                    click me
-                </button>
-                <div>Server response</div>
-                <div>{output}</div>
-            </header>
-        </div>
+        <Authenticator
+            variation="modal"
+            loginMechanisms={['email']}
+            signUpAttributes={[
+                'email',
+                'family_name',
+                'given_name',
+            ]}>
+            {({signOut, user}) => (
+                <div className="App-header">
+                    <h1>Hello {user?.username}</h1>
+                    <button onClick={signOut}>Sign out</button>
+                    <h1>Tetris template</h1>
+                    <div>Send to server:</div>
+                    <input onChange={(event) => setInput(event.target.value)}></input>
+                    <br/>
+                    <button onClick={() =>
+                        sayHelloApi({name: input}, user?.getSignInUserSession()?.getIdToken()?.getJwtToken()!).then(
+                            (res) => setOutput(res.message!),
+                            (err) => console.log(err)
+                        )}>
+                        click me
+                    </button>
+                    <div>Server response</div>
+                    <div>{output}</div>
+                </div>
+            )}
+        </Authenticator>
     );
 }
 
@@ -56,4 +64,4 @@ const sayHelloApi = (input: SayHelloInput, bearerToken: string): Promise<SayHell
     )
 }
 
-export default withAuthenticator(App);
+export default App;
