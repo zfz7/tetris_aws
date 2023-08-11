@@ -56,7 +56,6 @@ const sayHelloApi = (input: SayHelloInput, bearerToken: string): Promise<SayHell
         method: 'GET',
         headers: {
             "Authorization": `Bearer ${bearerToken}`,
-            "Content-Type": "application/json"
         }
     }).then(
         (response) => response.json(),
