@@ -35,6 +35,7 @@ stages.forEach(stage => {
         hostedZone: rootHostedZone.hostedZone,
         stageName: stage.name,
         userPoolArn: cognitoStack.userPool.userPoolArn,
+        cognitoEnv: cognitoStack.cognitoEnv,
         ...stackProps
     });
 })

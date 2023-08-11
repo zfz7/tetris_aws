@@ -27,7 +27,7 @@ use aws.protocols#restJson1
     }
 )
 @cognitoUserPools(
-    providerArns:[
+    providerArns: [
         "${UserPool.Arn}"
     ]
 )
@@ -35,7 +35,7 @@ use aws.protocols#restJson1
 @httpBearerAuth
 service Tetris {
     version: "1.0"
-    operations: [SayHello]
+    operations: [SayHello, Info]
 }
 
 @readonly
@@ -49,6 +49,18 @@ operation SayHello {
     output := {
         @required
         message: String
+    }
+    errors: [ApiError]
+}
+
+@auth([])
+@http(method: "GET", uri: "/info")
+operation Info {
+    output := {
+        region: String,
+        userPoolId: String
+        userPoolWebClientId: String
+        authenticationFlowType: String
     }
     errors: [ApiError]
 }

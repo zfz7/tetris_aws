@@ -9,6 +9,8 @@ import com.google.gson.GsonBuilder
 import com.google.gson.annotations.Expose
 import com.tetris.model.SayHelloRequest
 import com.tetris.model.SayHelloResponse
+import com.tetris.model.InfoRequest
+import com.tetris.model.InfoResponse
 
 
 // Lambda handler:
@@ -25,6 +27,15 @@ class LambdaMain : RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyRe
         return SayHelloResponse.invoke { message = input.name }
     }
 
+    private fun handleInfo(input: InfoRequest): InfoResponse =
+        InfoResponse.invoke {
+            region = System.getenv("REGION")
+            userPoolId = System.getenv("USER_POOL_ID")
+            userPoolWebClientId =  System.getenv("USER_POOL_WEB_CLIENT_ID")
+            authenticationFlowType = "USER_PASSWORD_AUTH"
+        }
+
+
     override fun handleRequest(input: APIGatewayProxyRequestEvent, context: Context?): APIGatewayProxyResponseEvent {
         val baseResponseWithCors = APIGatewayProxyResponseEvent().apply {
             headers = mapOf(
@@ -35,11 +46,15 @@ class LambdaMain : RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyRe
             )
         }
         try {
-            val res = when (input.requestContext.operationName) {
-                "SayHello" -> handleSayHello(SayHelloRequest.invoke { name = input.queryStringParameters["name"] })
+            val responseBody: String = when (input.requestContext.operationName) {
+                "SayHello" -> gson.toJson(handleSayHello(SayHelloRequest.invoke {
+                    name = input.queryStringParameters["name"]
+                }))
+
+                "Info" -> gson.toJson(handleInfo(InfoRequest.invoke { }))
                 else -> return baseResponseWithCors.apply { statusCode = 404 }
             }
-            return baseResponseWithCors.apply { body = gson.toJson(res) }
+            return baseResponseWithCors.apply { body = responseBody }
         } catch (e: ApiError) {
             val exceptionGson = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
             return baseResponseWithCors.apply {

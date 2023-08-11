@@ -10,6 +10,7 @@ import {
   UserPoolEmail,
 } from 'aws-cdk-lib/aws-cognito';
 import { StandardAttribute } from 'aws-cdk-lib/aws-cognito/lib/user-pool-attr';
+import { CognitoEnvironmentVariables } from '../bin/types';
 
 export interface CognitoStackProps extends StackProps {
   callbackURL: string;
@@ -17,6 +18,7 @@ export interface CognitoStackProps extends StackProps {
 }
 export class CognitoStack extends Stack {
   readonly userPool: UserPool;
+  readonly cognitoEnv: CognitoEnvironmentVariables;
   constructor(scope: Construct, id: string, props: CognitoStackProps) {
     super(scope, id, props);
     const required: StandardAttribute = {
@@ -44,7 +46,7 @@ export class CognitoStack extends Stack {
       deletionProtection: true,
     });
 
-    new UserPoolClient(this, `${PROJECT}-UserPoolClient`, {
+    const client = new UserPoolClient(this, `${PROJECT}-UserPoolClient`, {
       userPool: this.userPool,
       supportedIdentityProviders: [UserPoolClientIdentityProvider.COGNITO],
       authFlows: {
@@ -54,6 +56,11 @@ export class CognitoStack extends Stack {
         callbackUrls: [props.callbackURL],
       },
     });
+    this.cognitoEnv = {
+      REGION: props.env?.region!,
+      USER_POOL_ID: this.userPool.userPoolId,
+      USER_POOL_WEB_CLIENT_ID: client.userPoolClientId,
+    };
 
     this.userPool.addDomain(`${PROJECT}-UserPoolDomain`, {
       cognitoDomain: {

@@ -9,12 +9,14 @@ import { Certificate, CertificateValidation } from 'aws-cdk-lib/aws-certificatem
 import { ARecord, IHostedZone, RecordTarget } from 'aws-cdk-lib/aws-route53';
 import { ApiGatewayDomain } from 'aws-cdk-lib/aws-route53-targets';
 import { PROJECT } from '../bin/config';
+import { CognitoEnvironmentVariables } from '../bin/types';
 
 export interface ServiceStackProps extends StackProps {
   stageName: string;
   apiDomainName: string;
   userPoolArn: string;
   hostedZone: IHostedZone;
+  cognitoEnv: CognitoEnvironmentVariables;
 }
 export class ServiceStack extends Stack {
   constructor(scope: Construct, id: string, props: ServiceStackProps) {
@@ -23,6 +25,9 @@ export class ServiceStack extends Stack {
       code: Code.fromAsset('../backend/build/libs/backend-all.jar', { deployTime: true }),
       handler: 'com.backend.LambdaMain',
       runtime: Runtime.JAVA_17,
+      environment: {
+        ...props.cognitoEnv,
+      },
     });
 
     lambda.addToRolePolicy(

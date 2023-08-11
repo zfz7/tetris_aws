@@ -4,3 +4,9 @@ export interface Stage {
     readonly region: string
     readonly isProd: boolean
 }
+
+export interface CognitoEnvironmentVariables {
+    readonly REGION: string
+    readonly USER_POOL_ID: string
+    readonly USER_POOL_WEB_CLIENT_ID: string
+}
