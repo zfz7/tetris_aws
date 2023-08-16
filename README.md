@@ -15,7 +15,7 @@ types in sync between the frontend and backend using code generation. Here is th
 * Infrastructure:
     * Build Tool: [Gradle](https://gradle.org/) and [Yarn](https://classic.yarnpkg.com/lang/en/)
     * Deployments: [CDK](https://aws.amazon.com/cdk/)
-    * Authentication: [Cognito](https://aws.amazon.com/cognito/)  (in work)
+    * Authentication: [Cognito](https://aws.amazon.com/cognito/)  
     * Api Definition: [Smithy](https://smithy.io/2.0/index.html)
     * Kotlin Type Generation: [smithy-kotlin](https://github.com/awslabs/smithy-kotlin)
     * Typescript Type Generation: [smithy-typescript](https://github.com/awslabs/smithy-typescript)
