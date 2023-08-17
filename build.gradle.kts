@@ -1,3 +1,7 @@
+extra["smithyVersion"] = "1.35.0"
+extra["yarnVersion"] = "1.22.19"
+extra["nodeVersion"] = "18.17.0"
+
 plugins {
     val kotlinVersion = "1.9.0"
     val nodePluginVersion = "5.0.0"

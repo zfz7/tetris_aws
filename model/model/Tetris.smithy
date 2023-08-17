@@ -54,6 +54,7 @@ operation SayHello {
 }
 
 @auth([])
+@readonly
 @http(method: "GET", uri: "/info")
 operation Info {
     output := {
