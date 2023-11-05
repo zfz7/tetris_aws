@@ -8,7 +8,7 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib"))
-    implementation("aws.smithy.kotlin:smithy-client:0.24.0")
+    implementation("aws.smithy.kotlin:smithy-client:${rootProject.extra["smithyKotlinVersion"]}")
 }
 
 tasks.register<Copy>("copy_kt_client_from_model") {

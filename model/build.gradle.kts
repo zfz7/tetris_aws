@@ -10,8 +10,8 @@ repositories {
 dependencies {
     implementation("software.amazon.smithy:smithy-aws-traits:${rootProject.extra["smithyVersion"]}")
     implementation("software.amazon.smithy:smithy-aws-apigateway-traits:${rootProject.extra["smithyVersion"]}")
-    implementation("software.amazon.smithy.typescript:smithy-typescript-codegen:0.17.1")
-    implementation("software.amazon.smithy.kotlin:smithy-kotlin-codegen:0.25.0")
+    implementation("software.amazon.smithy.typescript:smithy-typescript-codegen:${rootProject.extra["smithyTypeScriptVersion"]}")
+    implementation("software.amazon.smithy.kotlin:smithy-kotlin-codegen:${rootProject.extra["smithyKotlinVersion"]}")
 }
 
 buildscript {
