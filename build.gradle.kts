@@ -1,8 +1,9 @@
-extra["smithyVersion"] = "1.40.0"
+extra["smithyVersion"] = "1.42.0"
 extra["yarnVersion"] = "1.22.19"
-extra["nodeVersion"] = "20.9.0"
-extra["smithyKotlinVersion"] = "0.28.1"
-extra["smithyTypeScriptVersion"] = "0.18.0"
+extra["nodeVersion"] = "20.10.0"
+extra["smithyKotlinVersion"] = "1.0.7"
+extra["smithyKotlinCodegenVersion"] = "0.30.8"
+extra["smithyTypeScriptVersion"] = "0.19.0"
 
 plugins {
     val kotlinVersion = "1.9.0"
