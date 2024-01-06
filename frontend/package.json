@@ -4,11 +4,11 @@
   "private": true,
   "dependencies": {
     "@aws-amplify/ui-react": "^5.1.0",
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^13.0.0",
-    "@testing-library/user-event": "^13.2.1",
-    "@types/jest": "^27.0.1",
-    "@types/node": "^16.7.13",
+    "@testing-library/jest-dom": "^6.2.0",
+    "@testing-library/react": "^14.1.2",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/jest": "^29.5.11",
+    "@types/node": "^20.10.6",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "aws-amplify": "^5.3.7",
@@ -16,9 +16,9 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
-    "ts-client": "link:./../tsclient",
-    "typescript": "^4.4.2",
-    "web-vitals": "^2.1.0"
+    "ts-client": "link:../tsclient",
+    "typescript": "^5.3.3",
+    "web-vitals": "^3.5.1"
   },
   "scripts": {
     "start": "react-scripts start",
