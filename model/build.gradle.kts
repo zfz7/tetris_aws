@@ -1,5 +1,6 @@
 plugins {
-    id("software.amazon.smithy").version("0.7.0")
+    kotlin("jvm")
+    id("software.amazon.smithy.gradle.smithy-jar").version("0.9.0")
 }
 
 repositories {
@@ -8,26 +9,17 @@ repositories {
 }
 
 dependencies {
-    implementation("software.amazon.smithy:smithy-aws-traits:${rootProject.extra["smithyVersion"]}")
-    implementation("software.amazon.smithy:smithy-aws-apigateway-traits:${rootProject.extra["smithyVersion"]}")
     implementation("software.amazon.smithy.typescript:smithy-typescript-codegen:${rootProject.extra["smithyTypeScriptVersion"]}")
     implementation("software.amazon.smithy.kotlin:smithy-kotlin-codegen:${rootProject.extra["smithyKotlinCodegenVersion"]}")
-
 }
 
-buildscript {
-    repositories {
-        mavenCentral()
-    }
+smithy {
+    smithyBuildConfigs = files("smithy-build.json")
     dependencies {
-        classpath("software.amazon.smithy:smithy-openapi:${rootProject.extra["smithyVersion"]}")
-        classpath("software.amazon.smithy:smithy-model:${rootProject.extra["smithyVersion"]}")
-        classpath("software.amazon.smithy:smithy-aws-traits:${rootProject.extra["smithyVersion"]}")
-        classpath("software.amazon.smithy:smithy-aws-apigateway-openapi:${rootProject.extra["smithyVersion"]}")
-        classpath("software.amazon.smithy:smithy-cli:${rootProject.extra["smithyVersion"]}")
+        implementation("software.amazon.smithy:smithy-openapi:${rootProject.extra["smithyVersion"]}")
+        implementation("software.amazon.smithy:smithy-model:${rootProject.extra["smithyVersion"]}")
+        implementation("software.amazon.smithy:smithy-aws-traits:${rootProject.extra["smithyVersion"]}")
+        implementation("software.amazon.smithy:smithy-aws-apigateway-openapi:${rootProject.extra["smithyVersion"]}")
+        implementation("software.amazon.smithy:smithy-cli:${rootProject.extra["smithyVersion"]}")
     }
-}
-
-java.sourceSets["main"].java {
-    srcDirs("model", "src/main/smithy")
 }
