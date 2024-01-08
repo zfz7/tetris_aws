@@ -16,6 +16,7 @@ dependencies {
 smithy {
     smithyBuildConfigs = files("smithy-build.json")
     dependencies {
+        implementation("software.amazon.smithy.typescript:smithy-aws-typescript-codegen:${rootProject.extra["smithyTypeScriptVersion"]}")
         implementation("software.amazon.smithy:smithy-openapi:${rootProject.extra["smithyVersion"]}")
         implementation("software.amazon.smithy:smithy-model:${rootProject.extra["smithyVersion"]}")
         implementation("software.amazon.smithy:smithy-aws-traits:${rootProject.extra["smithyVersion"]}")

@@ -1,22 +1,19 @@
-import { InfoOutput, SayHelloInput, SayHelloOutput } from "ts-client";
+import { InfoOutput, SayHelloInput, SayHelloOutput, Tetris } from "ts-client";
 
 const baseUrl = `https://api.${window.location.hostname}`;
 export const getHello = (
   input: SayHelloInput,
   bearerToken: string,
 ): Promise<SayHelloOutput> => {
-  return fetch(
-    `${baseUrl}/hello?` + new URLSearchParams({ name: input.name! }),
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${bearerToken}`,
-      },
+  const client = new Tetris({
+    endpoint: baseUrl,
+    region: "us-west-2",
+    token: {
+      token: bearerToken,
     },
-  ).then(
-    (response) => response.json(),
-    (err) => console.log(err),
-  );
+  });
+
+  return client.sayHello(input);
 };
 
 export const getInfo = (): Promise<InfoOutput> => {
