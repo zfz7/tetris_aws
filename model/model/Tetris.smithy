@@ -20,7 +20,7 @@ use aws.protocols#restJson1
 @restJson1
 @authorizer("cognito")
 @authorizers(
-    cognito: {scheme: "aws.auth#cognitoUserPools"}
+    cognito: { scheme: "aws.auth#cognitoUserPools" }
 )
 @cognitoUserPools(
     providerArns: ["${UserPool.Arn}"]
