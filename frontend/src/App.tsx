@@ -30,7 +30,7 @@ function App() {
         const [output, setOutput] = useState("");
         return (<div
             className="App-header">
-            <h1>Tetris template</h1>
+            <h1>Tetris template - Kotlin</h1>
             <h4>Hello {user?.attributes!["given_name"]} {user?.attributes!["family_name"]}</h4>
             {signOut ?
                 <button onClick={signOut}>Sign out</button>

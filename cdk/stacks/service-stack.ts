@@ -24,7 +24,7 @@ export class ServiceStack extends Stack {
     const lambda = new Function(this, `${PROJECT}-Api-Lambda`, {
       code: Code.fromAsset('../backend/build/libs/backend-all.jar', { deployTime: true }),
       handler: 'com.backend.LambdaMain',
-      runtime: Runtime.JAVA_17,
+      runtime: Runtime.JAVA_21,
       environment: {
         ...props.cognitoEnv,
       },

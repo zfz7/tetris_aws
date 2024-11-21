@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("software.amazon.smithy.gradle.smithy-jar").version("0.9.0")
+    id("software.amazon.smithy.gradle.smithy-jar").version("1.1.0")
 }
 
 repositories {
@@ -23,4 +23,8 @@ smithy {
         implementation("software.amazon.smithy:smithy-aws-apigateway-openapi:${rootProject.extra["smithyVersion"]}")
         implementation("software.amazon.smithy:smithy-cli:${rootProject.extra["smithyVersion"]}")
     }
+}
+
+java.sourceSets["main"].java {
+    srcDirs("model", "src/main/smithy")
 }

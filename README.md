@@ -56,9 +56,9 @@ export AWS_ACCOUNT=123456789012
 export ROOT_HOSTED_ZONE_ID=ABCDEFGHIJKLIMOP
 export ROOT_HOSTED_ZONE_NAME=example.com
 ```
-3. Build the project (from root): `./gradle build` 
+3. Build the project (from root): `./gradlew build` 
 4. Login to AWS: `aws sso login` 
-5. Deploy the project (from root): `./gradle deploy` 
+5. Deploy the project (from root): `./gradlew deploy` 
 
 ### Other Commands
 

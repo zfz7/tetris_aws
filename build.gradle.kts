@@ -1,13 +1,13 @@
-extra["smithyVersion"] = "1.49.0"
+extra["smithyVersion"] = "1.52.1"
 extra["yarnVersion"] = "1.22.19"
-extra["nodeVersion"] = "20.14.0"
-extra["smithyKotlinVersion"] = "1.2.5"
-extra["smithyKotlinCodegenVersion"] = "0.32.5"
-extra["smithyTypeScriptVersion"] = "0.21.0"
+extra["nodeVersion"] = "22.11.0"
+extra["smithyKotlinVersion"] = "1.3.24"
+extra["smithyKotlinCodegenVersion"] = "0.33.23"
+extra["smithyTypeScriptVersion"] = "0.25.0"
 
 plugins {
-    val kotlinVersion = "1.9.0"
-    val nodePluginVersion = "5.0.0"
+    val kotlinVersion = "2.0.21"
+    val nodePluginVersion = "7.1.0"
 
     kotlin("jvm") version kotlinVersion apply false
     kotlin("kapt") version kotlinVersion apply false
