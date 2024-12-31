@@ -1,9 +1,9 @@
 import { Construct } from 'constructs';
-import { Stack, StackProps } from 'aws-cdk-lib';
+import { Duration, Stack, StackProps } from 'aws-cdk-lib';
 import { Bucket, BucketAccessControl } from 'aws-cdk-lib/aws-s3';
 import { BucketDeployment, Source } from 'aws-cdk-lib/aws-s3-deployment';
 import * as path from 'path';
-import { Distribution, OriginAccessIdentity } from 'aws-cdk-lib/aws-cloudfront';
+import { Distribution, OriginAccessIdentity, PriceClass } from 'aws-cdk-lib/aws-cloudfront';
 import { S3Origin } from 'aws-cdk-lib/aws-cloudfront-origins';
 import { ARecord, IPublicHostedZone, RecordTarget } from 'aws-cdk-lib/aws-route53';
 import { DnsValidatedCertificate } from 'aws-cdk-lib/aws-certificatemanager';
@@ -21,11 +21,6 @@ export class WebsiteStack extends Stack {
 
     const websiteBuck = new Bucket(this, `${PROJECT}-Website-Bucket`, {
       accessControl: BucketAccessControl.PRIVATE,
-    });
-
-    new BucketDeployment(this, `${PROJECT}-Bucket-Deployment`, {
-      destinationBucket: websiteBuck,
-      sources: [Source.asset(path.resolve('../frontend/', 'build'))],
     });
 
     const originAccessIdentity = new OriginAccessIdentity(this, 'OriginAccessIdentity');
@@ -46,6 +41,23 @@ export class WebsiteStack extends Stack {
       },
       domainNames: [props.domainName],
       certificate: certificate,
+      priceClass: PriceClass.PRICE_CLASS_100, // USA, Canada, Europe, & Israel
+      errorResponses: [
+        //SPA applications handle routing on the client side
+        {
+          httpStatus: 404, // Catch missing routes and serve application
+          responseHttpStatus: 200,
+          responsePagePath: '/index.html', // Serve index.html for missing routes then
+          ttl: Duration.seconds(0), // Cache 404 responses for 0 seconds
+        },
+      ],
+    });
+
+    new BucketDeployment(this, `${PROJECT}-Bucket-Deployment`, {
+      destinationBucket: websiteBuck,
+      distribution: distribution,
+      distributionPaths: ['/*'], // Invalidate existing distribution
+      sources: [Source.asset(path.resolve('../frontend/', 'build'))],
     });
 
     new ARecord(this, `${PROJECT}-Website-ARecord`, {
