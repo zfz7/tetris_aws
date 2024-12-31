@@ -12,9 +12,6 @@ configure<NodeExtension> {
 }
 
 val install = tasks.register<YarnTask>("install") {
-    inputs.file(file("$projectDir/yarn.lock"))
-    inputs.file(file("$projectDir/package.json"))
-    outputs.dir(file("$projectDir/node_modules"))
     args.set(listOf("install"))
 }
 
@@ -28,8 +25,6 @@ tasks.register<YarnTask>("build") {
     dependsOn(install)
     dependsOn(":tsclient:build")
     mustRunAfter("test")
-    inputs.dir(file("$projectDir/src"))
-    outputs.dir(file("$projectDir/build"))
     args.set(listOf("build"))
 }
 

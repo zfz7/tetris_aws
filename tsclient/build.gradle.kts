@@ -13,9 +13,6 @@ configure<NodeExtension> {
 
 val install = tasks.register<YarnTask>("install") {
     dependsOn("copy_ts_client_from_model")
-    inputs.file(file("$projectDir/yarn.lock"))
-    inputs.file(file("$projectDir/package.json"))
-    outputs.dir(file("$projectDir/node_modules"))
     args.set(listOf("install"))
 }
 
@@ -34,13 +31,17 @@ tasks.register<YarnTask>("test") {
 tasks.register<YarnTask>("build") {
     dependsOn(install)
     mustRunAfter("test")
-    inputs.dir(file("$projectDir"))
-    outputs.dir(file("$projectDir/build"))
     args.set(listOf("build"))
 }
 
 task<Delete>("clean") {
+    delete(file("$projectDir/build"))
+    delete(file("$projectDir/src"))
+    delete(file("$projectDir/dist-cjs"))
+    delete(file("$projectDir/dist-es"))
+    delete(file("$projectDir/dist-types"))
+    delete(file("$projectDir/node_modules"))
     delete(fileTree("$projectDir") {
-        exclude("yarn.lock", "build.gradle.kts", "settings.gradle.kts", "/node_modules/**")
+        exclude("yarn.lock", "build.gradle.kts", "settings.gradle.kts")
     })
 }
