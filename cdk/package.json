@@ -10,7 +10,7 @@
     "test": "jest",
     "cdk": "cdk",
     "deploy": "cdk bootstrap && cdk deploy --all --require-approval never",
-    "format": "prettier --write 'stacks/**/*.ts|bin/**/*.ts'"
+    "format": "prettier --write '**/*.ts'"
   },
   "devDependencies": {
     "@types/jest": "^29.5.3",
