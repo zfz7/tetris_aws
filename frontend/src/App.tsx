@@ -44,10 +44,7 @@ function App() {
         <br />
         <button
           onClick={() =>
-            getHello(
-              { name: input },
-              user?.getSignInUserSession()?.getIdToken()?.getJwtToken()!,
-            ).then(
+            getHello({ name: input }).then(
               (res) => setOutput(res.message!),
               (err) => console.log(err),
             )
