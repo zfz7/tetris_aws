@@ -9,7 +9,7 @@ import { Certificate, CertificateValidation } from 'aws-cdk-lib/aws-certificatem
 import { ARecord, IHostedZone, RecordTarget } from 'aws-cdk-lib/aws-route53';
 import { ApiGatewayDomain } from 'aws-cdk-lib/aws-route53-targets';
 import { PROJECT } from '../bin/config';
-import { CognitoEnvironmentVariables } from '../bin/types';
+import { CognitoEnvironmentVariables, Operation } from '../bin/types';
 
 export interface ServiceStackProps extends StackProps {
   stageName: string;
@@ -18,7 +18,11 @@ export interface ServiceStackProps extends StackProps {
   hostedZone: IHostedZone;
   cognitoEnv: CognitoEnvironmentVariables;
 }
+const modelPath = `../model/build/smithyprojections/model/source/openapi/Tetris.openapi.json`;
+
 export class ServiceStack extends Stack {
+  readonly operations: Operation[];
+  readonly apiName: string;
   constructor(scope: Construct, id: string, props: ServiceStackProps) {
     super(scope, id, props);
     const lambda = new Function(this, `${PROJECT}-Api-Lambda`, {
@@ -39,9 +43,10 @@ export class ServiceStack extends Stack {
     );
 
     const apiGatewayRole = getApiGatewayRole(this, `${PROJECT}-${props.stageName}-ApiExecutionRole`, lambda);
+    this.apiName = `${PROJECT}-Api`;
 
     const api = new SpecRestApi(this, `${PROJECT}-Apigateway`, {
-      restApiName: `${PROJECT}-Api`,
+      restApiName: this.apiName,
       description: `${PROJECT}-Api`,
       apiDefinition: ApiDefinition.fromInline(
         getOpenApiDefinition(lambda.functionArn, props.env!.region!, apiGatewayRole, props.userPoolArn),
@@ -49,6 +54,7 @@ export class ServiceStack extends Stack {
       deploy: true,
       deployOptions: {
         stageName: props.stageName,
+        metricsEnabled: true,
       },
       domainName: {
         domainName: props.apiDomainName,
@@ -67,6 +73,10 @@ export class ServiceStack extends Stack {
       target: RecordTarget.fromAlias(new ApiGatewayDomain(api.domainName!)),
       zone: props.hostedZone,
     });
+    this.operations = parseOperations();
+    if (this.operations.length <= 0) {
+      throw new Error(`Could not parse operations: ${this.operations}`);
+    }
   }
 }
 
@@ -93,8 +103,6 @@ function getOpenApiDefinition(
   apiGatewayRole: Role,
   userPoolArn: string,
 ): Record<string, unknown> {
-  const modelPath = `../model/build/smithyprojections/model/source/openapi/Tetris.openapi.json`;
-
   if (!fs.existsSync(modelPath)) {
     throw new Error(`Cannot find Open API definition. Path Recipe: ${modelPath}`);
   }
@@ -110,4 +118,30 @@ function getOpenApiDefinition(
   modelFile = modelFile.replace(/\${DeployVersion}/g, '1.0.0');
   modelFile = modelFile.replace(/\${UserPool.Arn}/g, userPoolArn);
   return JSON.parse(modelFile);
+}
+
+function parseOperations(): Operation[] {
+  if (!fs.existsSync(modelPath)) {
+    throw new Error(`Cannot find Open API definition. Path Recipe: ${modelPath}`);
+  }
+
+  // Read and parse the OpenAPI JSON file
+  const rawData = fs.readFileSync(modelPath, 'utf-8');
+  const openAPIDefinition = JSON.parse(rawData);
+  const result: Operation[] = [];
+
+  // Iterate over the paths in the OpenAPI definition
+  if (openAPIDefinition.paths) {
+    for (const [path] of Object.entries(openAPIDefinition.paths)) {
+      for (const [method] of Object.entries(openAPIDefinition.paths[path])) {
+        const name = openAPIDefinition.paths[path][method].operationId;
+        // Skip options and head
+        if (['get', 'post', 'put', 'delete', 'patch'].includes(method)) {
+          result.push({ method, path, name: name as string });
+        }
+      }
+    }
+  }
+
+  return result;
 }

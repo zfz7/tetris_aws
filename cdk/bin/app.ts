@@ -6,6 +6,7 @@ import { RootHostedZone } from '../stacks/root-hosted-zone';
 import { WebsiteStack } from '../stacks/website-stack';
 import { ServiceStack } from '../stacks/service-stack';
 import { CognitoStack } from '../stacks/cogntio-stack';
+import { MonitoringStack } from '../stacks/monitoring';
 
 const app = new App();
 
@@ -30,12 +31,21 @@ stages.forEach((stage) => {
     ...stackProps,
   });
 
-  new ServiceStack(app, `${PROJECT}-Service-Stack-${stage.name}`, {
+  const serviceStack = new ServiceStack(app, `${PROJECT}-Service-Stack-${stage.name}`, {
     apiDomainName: `api.${rootHostedZone.hostedZone.zoneName}`,
     hostedZone: rootHostedZone.hostedZone,
     stageName: stage.name,
     userPoolArn: cognitoStack.userPool.userPoolArn,
     cognitoEnv: cognitoStack.cognitoEnv,
     ...stackProps,
+  });
+
+  new MonitoringStack(app, `${stage.name}-${PROJECT}-Monitoring-Stack`, {
+    apiName: serviceStack.apiName,
+    dashboardName: `Monitoring-${stage.name}`,
+    operations: serviceStack.operations,
+    region: stage.region,
+    stage: stage.name,
+    ddbTables: [],
   });
 });
