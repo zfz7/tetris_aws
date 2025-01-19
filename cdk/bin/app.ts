@@ -47,5 +47,6 @@ stages.forEach((stage) => {
     region: stage.region,
     stage: stage.name,
     ddbTables: [],
+    ...stackProps,
   });
 });
