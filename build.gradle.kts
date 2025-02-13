@@ -6,7 +6,7 @@ extra["smithyKotlinCodegenVersion"] = "0.33.23"
 extra["smithyTypeScriptVersion"] = "0.25.0"
 
 plugins {
-    val kotlinVersion = "2.0.21"
+    val kotlinVersion = "2.1.10"
     val nodePluginVersion = "7.1.0"
 
     kotlin("jvm") version kotlinVersion apply false

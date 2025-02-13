@@ -4,19 +4,17 @@ import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.annotations.Expose
-import com.tetris.model.SayHelloRequest
-import com.tetris.model.SayHelloResponse
 import com.tetris.model.InfoRequest
 import com.tetris.model.InfoResponse
+import com.tetris.model.SayHelloRequest
+import com.tetris.model.SayHelloResponse
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
 
 // Lambda handler:
 // com.backend.LambdaMain
 class LambdaMain : RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
-    private val gson = Gson()
     private fun handleSayHello(input: SayHelloRequest): SayHelloResponse {
         if (input.name == "400") {
             throw ApiError(errorMessage = "Throwing 400 error")
@@ -31,7 +29,7 @@ class LambdaMain : RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyRe
         InfoResponse.invoke {
             region = System.getenv("REGION")
             userPoolId = System.getenv("USER_POOL_ID")
-            userPoolWebClientId =  System.getenv("USER_POOL_WEB_CLIENT_ID")
+            userPoolWebClientId = System.getenv("USER_POOL_WEB_CLIENT_ID")
             authenticationFlowType = "USER_PASSWORD_AUTH"
         }
 
@@ -47,25 +45,47 @@ class LambdaMain : RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyRe
         }
         try {
             val responseBody: String = when (input.requestContext.operationName) {
-                "SayHello" -> gson.toJson(handleSayHello(SayHelloRequest.invoke {
+                "SayHello" -> Json.encodeToString(handleSayHello(SayHelloRequest.invoke {
                     name = input.queryStringParameters["name"]
-                }))
+                }).toDto())
 
-                "Info" -> gson.toJson(handleInfo(InfoRequest.invoke { }))
+                "Info" -> Json.encodeToString(handleInfo(InfoRequest.invoke { }).toDto())
                 else -> return baseResponseWithCors.apply { statusCode = 404 }
             }
             return baseResponseWithCors.apply { body = responseBody }
         } catch (e: ApiError) {
-            val exceptionGson = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
             return baseResponseWithCors.apply {
-                statusCode = 400; body = exceptionGson.toJson(e, ApiError::class.java)
+                statusCode = 400; body = Json.encodeToString(e)
             }
         }
     }
 }
 
 //TODO this type must be manually kept in sync
+@Serializable
 data class ApiError(
-    @Expose
     val errorMessage: String
 ) : Throwable()
+
+@Serializable
+data class SayHelloResponseDto(
+    val message: String
+)
+
+fun SayHelloResponse.toDto() = SayHelloResponseDto(message = this.message)
+
+
+@Serializable
+data class InfoResponseDto(
+    val authenticationFlowType: String,
+    val region: String,
+    val userPoolId: String,
+    val userPoolWebClientId: String,
+)
+
+fun InfoResponse.toDto() = InfoResponseDto(
+    authenticationFlowType = this.authenticationFlowType.toString(),
+    region = this.region.toString(),
+    userPoolId = this.userPoolId.toString(),
+    userPoolWebClientId = this.userPoolWebClientId.toString()
+)
