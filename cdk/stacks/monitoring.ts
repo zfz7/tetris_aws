@@ -119,7 +119,7 @@ export class MonitoringStack extends Stack {
           }),
       ),
       view: GraphWidgetView.TIME_SERIES,
-      stacked: true,
+      stacked: false,
       region: region,
       width: 8,
     });
@@ -152,7 +152,7 @@ export class MonitoringStack extends Stack {
         }),
       ],
       view: GraphWidgetView.TIME_SERIES,
-      stacked: true,
+      stacked: false,
       region: region,
       width: 6,
     });
@@ -185,7 +185,7 @@ export class MonitoringStack extends Stack {
         }),
       ],
       view: GraphWidgetView.TIME_SERIES,
-      stacked: true,
+      stacked: false,
       region: region,
       width: 5,
     });
@@ -221,7 +221,7 @@ export class MonitoringStack extends Stack {
         }),
       ],
       view: GraphWidgetView.TIME_SERIES,
-      stacked: true,
+      stacked: false,
       region: region,
       width: 5,
     });
@@ -255,7 +255,7 @@ export class MonitoringStack extends Stack {
         }),
       ],
       view: GraphWidgetView.TIME_SERIES,
-      stacked: true,
+      stacked: false,
       region: region,
       width: 24,
     });
