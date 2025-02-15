@@ -13,6 +13,7 @@ import io.github.trueangle.knative.lambda.runtime.log.Log
 import io.github.trueangle.knative.lambda.runtime.log.warn
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.toKString
+import kotlinx.datetime.Clock.System
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import platform.posix.getenv
@@ -28,6 +29,13 @@ class LambdaMain : LambdaBufferedHandler<APIGatewayProxy, APIGatewayV2Response> 
         }
         if (input.name == "500") {
             throw RuntimeException("This is an unmapped error will result in 500")
+        }
+        if (input.name == "time") {
+            return SayHelloResponseContent(
+                message = input.name,
+                runtime = Runtime.JAVA_VIRTUAL_MACHINE,
+                time = System.now()
+            )
         }
         return SayHelloResponseContent(message = input.name, runtime = Runtime.KOTLIN_NATIVE)
     }

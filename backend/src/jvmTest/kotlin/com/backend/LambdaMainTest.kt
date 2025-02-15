@@ -1,9 +1,14 @@
 package com.backend
 
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
+import com.tetris.model.models.SayHelloResponseContent
+import kotlinx.datetime.Clock.System
+import kotlinx.serialization.json.Json
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+import kotlin.time.Duration.Companion.seconds
 
 class LambdaMainTest {
     private lateinit var subject: LambdaMain
@@ -25,6 +30,16 @@ class LambdaMainTest {
     }
 
     @Test
+    fun handleSayHelloRequestWithTIme() {
+        val result = Json.decodeFromString<SayHelloResponseContent>(subject.handleRequest(APIGatewayProxyRequestEvent().apply {
+            body = "{\"name\":\"time\"}"
+            requestContext = APIGatewayProxyRequestEvent.ProxyRequestContext().apply { operationName = "SayHello" }
+        }, null).body)
+        assertEquals(result.message, "time")
+        assertTrue(result.time!!.minus(System.now()) < 10.seconds)
+    }
+
+    @Test
     fun handleSayHelloErrors() {
         assertEquals(
             "{\"errorMessage\":\"Throwing 400 error\"}",
@@ -38,7 +53,6 @@ class LambdaMainTest {
     @Test
     fun handleInfoRequest() {
         assertEquals(
-//            "{\"region\":\"value1\",\"userPoolId\":\"value2\",\"userPoolWebClientId\":\"value3\",\"authenticationFlowType\":\"USER_PASSWORD_AUTH\"}",
             "{\"authenticationFlowType\":\"USER_PASSWORD_AUTH\"}",
             subject.handleRequest(APIGatewayProxyRequestEvent().apply {
                 requestContext = APIGatewayProxyRequestEvent.ProxyRequestContext().apply { operationName = "Info" }

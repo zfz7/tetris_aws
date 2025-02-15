@@ -8,6 +8,7 @@ import com.tetris.model.models.InfoResponseContent
 import com.tetris.model.models.Runtime
 import com.tetris.model.models.SayHelloRequestContent
 import com.tetris.model.models.SayHelloResponseContent
+import kotlinx.datetime.Clock.System as KSystem
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
@@ -21,6 +22,13 @@ class LambdaMain : RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyRe
         }
         if (input.name == "500") {
             throw RuntimeException("This is an unmapped error will result in 500")
+        }
+        if (input.name == "time") {
+            return SayHelloResponseContent(
+                message = input.name,
+                runtime = Runtime.JAVA_VIRTUAL_MACHINE,
+                time = KSystem.now()
+            )
         }
         return SayHelloResponseContent(message = input.name, runtime = Runtime.JAVA_VIRTUAL_MACHINE)
     }

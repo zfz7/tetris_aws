@@ -8,6 +8,11 @@ import platform.posix.setenv
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+import kotlin.time.Duration.Companion.seconds
+import com.tetris.model.models.SayHelloResponseContent
+import kotlinx.datetime.Clock.System
+import kotlinx.serialization.json.Json
 
 class LambdaMainTest {
     private lateinit var subject: LambdaMain
@@ -37,6 +42,17 @@ class LambdaMainTest {
                 context = context
             ).body
         )
+    }
+
+    @Test
+    fun handleSayHelloRequestWithTIme() {
+        val result =
+            Json.decodeFromString<SayHelloResponseContent>(subject.handleRequest(APIGatewayProxyRequestEvent().apply {
+                body = "{\"name\":\"time\"}"
+                requestContext = APIGatewayProxyRequestEvent.ProxyRequestContext().apply { operationName = "SayHello" }
+            }, null).body)
+        assertEquals(result.message, "time")
+        assertTrue(result.time!!.minus(System.now()) < 10.seconds)
     }
 
     @Test

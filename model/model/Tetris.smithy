@@ -49,6 +49,9 @@ operation SayHello {
 
         @required
         runtime: Runtime
+
+        @timestampFormat("date-time")
+        time: Timestamp
     }
 
     errors: [
