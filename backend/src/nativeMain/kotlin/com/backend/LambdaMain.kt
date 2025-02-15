@@ -33,7 +33,7 @@ class LambdaMain : LambdaBufferedHandler<APIGatewayProxy, APIGatewayV2Response> 
         if (input.name == "time") {
             return SayHelloResponseContent(
                 message = input.name,
-                runtime = Runtime.JAVA_VIRTUAL_MACHINE,
+                runtime = Runtime.KOTLIN_NATIVE,
                 time = System.now()
             )
         }
