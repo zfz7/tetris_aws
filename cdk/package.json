@@ -10,7 +10,7 @@
     "test": "jest",
     "cdk": "cdk",
     "deploy-native": "NATIVE=TRUE cdk bootstrap && NATIVE=TRUE cdk deploy --all --require-approval never",
-    "deploy-java": "cdk bootstrap && cdk deploy --all --require-approval never",
+    "deploy-jvm": "cdk bootstrap && cdk deploy --all --require-approval never",
     "format": "prettier --write '**/*.ts'"
   },
   "devDependencies": {

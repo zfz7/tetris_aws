@@ -33,10 +33,10 @@ tasks.register<YarnTask>("build") {
     args.set(listOf("build"))
 }
 
-tasks.register<YarnTask>("deploy-java") {
+tasks.register<YarnTask>("deploy-jvm") {
     dependsOn(":build")
     dependsOn(":backend:jvmShadowJar")
-    args.set(listOf("deploy-java"))
+    args.set(listOf("deploy-jvm"))
 }
 
 tasks.register<YarnTask>("deploy-native") {

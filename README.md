@@ -76,7 +76,7 @@ export ROOT_HOSTED_ZONE_NAME=example.com
 ./gradlew model:build
 ###Deploy 
 ./gradlew deploy-native
-./gradlew deploy-java
+./gradlew deploy-jvm
 
 ###Testing the endpoint with Cognito
 export C_TOKEN="$(aws cognito-idp initiate-auth --region us-west-2 --auth-flow USER_PASSWORD_AUTH --client-id <YOUR_CLIENT_ID> --auth-parameters USERNAME=<USERNAME>,PASSWORD=<PASSWORD> | jq -r .AuthenticationResult.IdToken)"'

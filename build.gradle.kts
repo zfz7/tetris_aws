@@ -39,10 +39,10 @@ tasks.register("clean") {
     dependsOn("backend:clean")
     dependsOn("frontend:clean")
 }
-tasks.register("deploy-java") {
+tasks.register("deploy-jvm") {
     dependsOn("build")
     dependsOn("backend:jvmShadowJar")
-    dependsOn("cdk:deploy-java")
+    dependsOn("cdk:deploy-jvm")
 }
 tasks.register("deploy-native") {
     dependsOn("build")
