@@ -1,44 +1,46 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "2.1.10"
-    kotlin("plugin.serialization") version "2.1.10"
-    id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("java")
-    application
+    alias(libs.plugins.kotlinxSerialization)
+    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.shadowJar)
 }
 
 repositories {
     mavenCentral()
 }
 
-dependencies {
-    implementation("com.amazonaws:aws-lambda-java-events:3.14.0")
-    implementation("com.amazonaws:aws-lambda-java-core:1.2.3")
+kotlin {
+    jvm {
+        withJava()
+        tasks.register<ShadowJar>("jvmShadowJar") { // create fat jar task
+            val mainCompilation = compilations["main"]
+            val jvmRuntimeConfiguration = mainCompilation
+                .runtimeDependencyConfigurationName
+                .let { project.configurations[it] }
 
-    //kotlinx-serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
-
-    implementation(project(":ktclient"))
-
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.11.3")
-    testImplementation("io.mockk:mockk:1.13.13")
-    testImplementation("uk.org.webcompere:system-stubs-jupiter:2.1.7")
-
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-}
-
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
+            from(mainCompilation.output.allOutputs)
+            configurations = listOf(jvmRuntimeConfiguration)
+            archiveClassifier.set("all")
+            manifest.attributes("Main-Class" to "none")
+        }
     }
-}
 
-application {
-    mainClass.set("none")//Need to generate jar
-}
+    sourceSets {
+        jvmMain {
+            dependencies {
+                implementation(project(":ktclient"))
+                implementation("com.amazonaws:aws-lambda-java-events:3.14.0")
+                implementation("com.amazonaws:aws-lambda-java-core:1.2.3")
+            }
+        }
 
-tasks.named<Test>("test") {
-    useJUnitPlatform()
+        jvmTest {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
+    }
 }
 
 tasks.named("build") {

@@ -28,6 +28,7 @@ tasks.register("build") {
     dependsOn("tsclient:build")
     dependsOn("ktclient:build")
     dependsOn("backend:build")
+    dependsOn("backend:jvmShadowJar")
     dependsOn("frontend:build")
 }
 tasks.register("clean") {

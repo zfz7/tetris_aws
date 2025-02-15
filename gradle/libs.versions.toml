@@ -5,6 +5,7 @@ trueangleLambda = "0.0.5-SNAPSHOT"
 coroutinest = "1.10.1"
 date-time = "0.6.2"
 ktor = "3.1.0"
+shadow-jar = "8.1.1"
 
 [libraries]
 kotlin-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
@@ -22,4 +23,5 @@ ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx
 [plugins]
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+shadowJar = { id = "com.github.johnrengelman.shadow", version.ref = "shadow-jar" }
 trueangleLambda = { id = "io.github.trueangle.plugin.lambda", version.ref = "trueangleLambda" }
