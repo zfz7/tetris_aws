@@ -16,7 +16,7 @@ class LambdaMainTest {
     @Test
     fun handleSayHelloRequest() {
         assertEquals(
-            "{\"message\":\"hi\"}",
+            "{\"message\":\"hi\",\"runtime\":\"Java Virtual Machine\"}",
             subject.handleRequest(APIGatewayProxyRequestEvent().apply {
                 body = "{\"name\":\"hi\"}"
                 requestContext = APIGatewayProxyRequestEvent.ProxyRequestContext().apply { operationName = "SayHello" }

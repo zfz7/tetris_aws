@@ -31,7 +31,7 @@ class LambdaMainTest {
     @Test
     fun handleSayHelloRequest() = runTest {
         assertEquals(
-            "{\"message\":\"hi\"}",
+            "{\"message\":\"hi\",\"runtime\":\"Kotlin Native\"}",
             subject.handleRequest(
                 input = createAPIGatewayProxyEvent("{\"name\":\"hi\"}", "SayHello"),
                 context = context

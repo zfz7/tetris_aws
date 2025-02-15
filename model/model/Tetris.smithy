@@ -46,11 +46,19 @@ operation SayHello {
     output := {
         @required
         message: String
+
+        @required
+        runtime: Runtime
     }
 
     errors: [
         ApiError
     ]
+}
+
+enum Runtime {
+    JVM = "Java Virtual Machine"
+    NATIVE = "Kotlin Native"
 }
 
 @auth([])

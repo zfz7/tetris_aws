@@ -5,6 +5,7 @@ import com.amazonaws.services.lambda.runtime.RequestHandler
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import com.tetris.model.models.InfoResponseContent
+import com.tetris.model.models.Runtime
 import com.tetris.model.models.SayHelloRequestContent
 import com.tetris.model.models.SayHelloResponseContent
 import kotlinx.serialization.Serializable
@@ -21,7 +22,7 @@ class LambdaMain : RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyRe
         if (input.name == "500") {
             throw RuntimeException("This is an unmapped error will result in 500")
         }
-        return SayHelloResponseContent(message = input.name)
+        return SayHelloResponseContent(message = input.name, runtime = Runtime.JAVA_VIRTUAL_MACHINE)
     }
 
     private fun handleInfo(): InfoResponseContent =

@@ -2,6 +2,7 @@ package com.backend
 
 import com.backend.apigateway.APIGatewayProxy
 import com.tetris.model.models.InfoResponseContent
+import com.tetris.model.models.Runtime
 import com.tetris.model.models.SayHelloRequestContent
 import com.tetris.model.models.SayHelloResponseContent
 import io.github.trueangle.knative.lambda.runtime.LambdaRuntime
@@ -28,7 +29,7 @@ class LambdaMain : LambdaBufferedHandler<APIGatewayProxy, APIGatewayV2Response> 
         if (input.name == "500") {
             throw RuntimeException("This is an unmapped error will result in 500")
         }
-        return SayHelloResponseContent(message = input.name)
+        return SayHelloResponseContent(message = input.name, runtime = Runtime.KOTLIN_NATIVE)
     }
 
     @OptIn(ExperimentalForeignApi::class)
