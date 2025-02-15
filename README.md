@@ -5,6 +5,8 @@
 The goal of this project was to create a full stack AWS native project template. The secondary goal is to keep the DTO
 types in sync between the frontend and backend using code generation. Here is the achieved stack:
 
+You can build either a kotlin native binary or the JVM runtime.
+
 * Backend:
     * [Kotlin](https://kotlinlang.org/)
     * [Lambda](https://aws.amazon.com/lambda/)
@@ -17,7 +19,8 @@ types in sync between the frontend and backend using code generation. Here is th
     * Deployments: [CDK](https://aws.amazon.com/cdk/)
     * Authentication: [Cognito](https://aws.amazon.com/cognito/)  
     * Api Definition: [Smithy](https://smithy.io/2.0/index.html)
-    * Kotlin Type Generation: [smithy-kotlin](https://github.com/awslabs/smithy-kotlin)
+    * ~~Kotlin Type Generation: [smithy-kotlin](https://github.com/awslabs/smithy-kotlin)~~
+    * Kotlin Type Generation: [openApiGenerate](https://github.com/OpenAPITools/openapi-generator/blob/master/modules/openapi-generator-gradle-plugin/README.adoc)
     * Typescript Type Generation: [smithy-typescript](https://github.com/awslabs/smithy-typescript)
 
 ## Warnings
@@ -72,7 +75,8 @@ export ROOT_HOSTED_ZONE_NAME=example.com
 ./gradlew <project>:clean 
 ./gradlew model:build
 ###Deploy 
-./gradlew deploy
+./gradlew deploy-native
+./gradlew deploy-java
 
 ###Testing the endpoint with Cognito
 export C_TOKEN="$(aws cognito-idp initiate-auth --region us-west-2 --auth-flow USER_PASSWORD_AUTH --client-id <YOUR_CLIENT_ID> --auth-parameters USERNAME=<USERNAME>,PASSWORD=<PASSWORD> | jq -r .AuthenticationResult.IdToken)"'
