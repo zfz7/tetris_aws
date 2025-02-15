@@ -33,9 +33,16 @@ tasks.register<YarnTask>("build") {
     args.set(listOf("build"))
 }
 
-tasks.register<YarnTask>("deploy") {
+tasks.register<YarnTask>("deploy-java") {
     dependsOn(":build")
-    args.set(listOf("deploy"))
+    dependsOn(":backend:jvmShadowJar")
+    args.set(listOf("deploy-java"))
+}
+
+tasks.register<YarnTask>("deploy-native") {
+    dependsOn(":build")
+    dependsOn(":backend:buildLambdaRelease")
+    args.set(listOf("deploy-native"))
 }
 
 task<Delete>("clean") {

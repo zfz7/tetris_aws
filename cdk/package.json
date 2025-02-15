@@ -9,7 +9,8 @@
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
-    "deploy": "cdk bootstrap && cdk deploy --all --require-approval never",
+    "deploy-native": "NATVE=TRUE cdk bootstrap && NATVE=TRUE cdk deploy --all --require-approval never",
+    "deploy-java": "cdk bootstrap && cdk deploy --all --require-approval never",
     "format": "prettier --write '**/*.ts'"
   },
   "devDependencies": {

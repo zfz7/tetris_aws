@@ -28,7 +28,6 @@ tasks.register("build") {
     dependsOn("tsclient:build")
     dependsOn("ktclient:build")
     dependsOn("backend:build")
-    dependsOn("backend:jvmShadowJar")
     dependsOn("frontend:build")
 }
 tasks.register("clean") {
@@ -40,7 +39,13 @@ tasks.register("clean") {
     dependsOn("backend:clean")
     dependsOn("frontend:clean")
 }
-tasks.register("deploy") {
+tasks.register("deploy-java") {
     dependsOn("build")
-    dependsOn("cdk:deploy")
+    dependsOn("backend:jvmShadowJar")
+    dependsOn("cdk:deploy-java")
+}
+tasks.register("deploy-native") {
+    dependsOn("build")
+    dependsOn("backend:buildLambdaRelease")
+    dependsOn("cdk:deploy-native")
 }

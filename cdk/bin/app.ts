@@ -37,6 +37,7 @@ stages.forEach((stage) => {
     stageName: stage.name,
     userPoolArn: cognitoStack.userPool.userPoolArn,
     cognitoEnv: cognitoStack.cognitoEnv,
+    native: process.env.NATIVE === 'TRUE',
     ...stackProps,
   });
 
