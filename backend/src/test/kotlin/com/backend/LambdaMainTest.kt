@@ -26,7 +26,7 @@ class LambdaMainTest {
         assertEquals(
             "{\"message\":\"hi\"}",
             subject.handleRequest(APIGatewayProxyRequestEvent().apply {
-                queryStringParameters = mapOf(Pair("name", "hi"))
+                body = "{\"name\":\"hi\"}"
                 requestContext = APIGatewayProxyRequestEvent.ProxyRequestContext().apply { operationName = "SayHello" }
             }, null).body
         )
@@ -37,7 +37,7 @@ class LambdaMainTest {
         assertEquals(
             "{\"errorMessage\":\"Throwing 400 error\"}",
             subject.handleRequest(APIGatewayProxyRequestEvent().apply {
-                queryStringParameters = mapOf(Pair("name", "400"))
+                body = "{\"name\":\"400\"}"
                 requestContext = APIGatewayProxyRequestEvent.ProxyRequestContext().apply { operationName = "SayHello" }
             }, null).body
         )
@@ -49,7 +49,7 @@ class LambdaMainTest {
         environmentVariables.set("USER_POOL_ID", "value2");
         environmentVariables.set("USER_POOL_WEB_CLIENT_ID", "value3");
         assertEquals(
-            "{\"authenticationFlowType\":\"USER_PASSWORD_AUTH\",\"region\":\"value1\",\"userPoolId\":\"value2\",\"userPoolWebClientId\":\"value3\"}",
+            "{\"region\":\"value1\",\"userPoolId\":\"value2\",\"userPoolWebClientId\":\"value3\",\"authenticationFlowType\":\"USER_PASSWORD_AUTH\"}",
             subject.handleRequest(APIGatewayProxyRequestEvent().apply {
                 requestContext = APIGatewayProxyRequestEvent.ProxyRequestContext().apply { operationName = "Info" }
             }, null).body

@@ -42,5 +42,6 @@ tasks.named<Test>("test") {
 }
 
 tasks.named("build") {
-    dependsOn(":model:build")
+    dependsOn(":model:openApiGenerate")
+    dependsOn(":ktclient:build")
 }

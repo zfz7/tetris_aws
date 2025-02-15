@@ -36,10 +36,9 @@ service Tetris {
 }
 
 @readonly
-@http(method: "GET", uri: "/hello")
+@http(method: "POST", uri: "/hello")
 operation SayHello {
     input := {
-        @httpQuery("name")
         @required
         name: String
     }

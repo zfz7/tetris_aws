@@ -1,3 +1,4 @@
-/src/**
+**
+!.openapi-generator-ignore
 !build.gradle.kts
 !settings.gradle.kts
