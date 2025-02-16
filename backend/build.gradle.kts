@@ -51,11 +51,6 @@ kotlin {
     }
 
     sourceSets {
-        configurations.all {
-            resolutionStrategy {
-                force("io.ktor:ktor-client-curl:3.1.0") // Check if io.github.trueangle:lambda-runtime:0.0.5 is ready
-            }
-        }
         jvmMain {
             dependencies {
                 implementation(project(":ktclient"))
@@ -73,8 +68,8 @@ kotlin {
             dependencies {
                 implementation(project(":ktclient"))
                 implementation(libs.kotlin.serialization.json)
-                implementation("io.github.trueangle:lambda-runtime:0.0.4")
-                implementation("io.github.trueangle:lambda-events:0.0.4")
+                implementation("io.github.trueangle:lambda-runtime:0.0.5")
+                implementation("io.github.trueangle:lambda-events:0.0.5")
                 implementation(libs.kotlin.coroutines.test)
             }
         }
