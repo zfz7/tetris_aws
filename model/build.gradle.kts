@@ -1,11 +1,10 @@
 plugins {
     kotlin("jvm")
-    id("software.amazon.smithy.gradle.smithy-jar").version("1.1.0")
+    id("software.amazon.smithy.gradle.smithy-jar").version("1.2.0")
     id("org.openapi.generator") version "7.11.0"
 }
 
 repositories {
-    mavenLocal()
     mavenCentral()
 }
 
