@@ -33,7 +33,7 @@ export class ServiceStack extends Stack {
         ? Code.fromAsset('../backend/build/lambda/release/backend.zip', { deployTime: true })
         : Code.fromAsset('../backend/build/libs/backend-all.jar', { deployTime: true }),
       handler: props.native ? 'backend.kexe' : 'com.backend.LambdaMain',
-      runtime: props.native ? Runtime.PROVIDED_AL2 : Runtime.JAVA_21,
+      runtime: props.native ? Runtime.PROVIDED_AL2023 : Runtime.JAVA_21,
       architecture: props.native ? Architecture.X86_64 : undefined,
       environment: {
         ...props.cognitoEnv,

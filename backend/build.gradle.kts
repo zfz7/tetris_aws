@@ -42,10 +42,15 @@ kotlin {
     setOf(
         nativeTarget,
         linuxX64(),
-    ).forEach {
-        it.binaries {
+    ).forEach { target ->
+        target.binaries {
             executable {
                 entryPoint = "com.backend.main"
+                println(target.name)
+                linkerOpts =
+                    if(target.name == "linuxX64" )
+                        mutableListOf("-Wl,--as-needed") //Drops libcrypt.so.1 which isn't needed
+                    else mutableListOf()
             }
         }
     }
@@ -77,6 +82,11 @@ kotlin {
 }
 
 tasks.named("build") {
+    dependsOn(":model:openApiGenerate")
+    dependsOn(":ktclient:build")
+}
+
+tasks.named("generateProjectStructureMetadata") {
     dependsOn(":model:openApiGenerate")
     dependsOn(":ktclient:build")
 }
