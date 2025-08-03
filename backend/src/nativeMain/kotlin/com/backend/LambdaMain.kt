@@ -2,9 +2,7 @@ package com.backend
 
 import com.backend.apigateway.APIGatewayProxy
 import com.tetris.model.models.InfoResponseContent
-import com.tetris.model.models.Runtime
 import com.tetris.model.models.SayHelloRequestContent
-import com.tetris.model.models.SayHelloResponseContent
 import io.github.trueangle.knative.lambda.runtime.LambdaRuntime
 import io.github.trueangle.knative.lambda.runtime.api.Context
 import io.github.trueangle.knative.lambda.runtime.events.apigateway.APIGatewayV2Response
@@ -13,8 +11,6 @@ import io.github.trueangle.knative.lambda.runtime.log.Log
 import io.github.trueangle.knative.lambda.runtime.log.warn
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.toKString
-import kotlinx.datetime.Clock.System
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import platform.posix.getenv
 
@@ -23,22 +19,6 @@ fun main() = LambdaRuntime.run { LambdaMain() }
 // Lambda handler:
 // com.backend.LambdaMain
 class LambdaMain : LambdaBufferedHandler<APIGatewayProxy, APIGatewayV2Response> {
-    private fun handleSayHello(input: SayHelloRequestContent): SayHelloResponseContent {
-        if (input.name == "400") {
-            throw ApiError(errorMessage = "Throwing 400 error")
-        }
-        if (input.name == "500") {
-            throw RuntimeException("This is an unmapped error will result in 500")
-        }
-        if (input.name == "time") {
-            return SayHelloResponseContent(
-                message = input.name,
-                runtime = Runtime.KOTLIN_NATIVE,
-                time = System.now()
-            )
-        }
-        return SayHelloResponseContent(message = input.name, runtime = Runtime.KOTLIN_NATIVE)
-    }
 
     @OptIn(ExperimentalForeignApi::class)
     private fun handleInfo(): InfoResponseContent =
@@ -61,7 +41,7 @@ class LambdaMain : LambdaBufferedHandler<APIGatewayProxy, APIGatewayV2Response> 
         try {
             val body = when (input.requestContext.operationName) {
                 "SayHello" -> Json.encodeToString(
-                    handleSayHello(Json.decodeFromString<SayHelloRequestContent>(input.body ?: ""))
+                    SayHelloController.handleSayHello(Json.decodeFromString<SayHelloRequestContent>(input.body ?: ""))
                 )
 
                 "Info" -> Json.encodeToString(handleInfo())
@@ -86,8 +66,3 @@ class LambdaMain : LambdaBufferedHandler<APIGatewayProxy, APIGatewayV2Response> 
     }
 }
 
-//TODO this type must be manually kept in sync
-@Serializable
-data class ApiError(
-    val errorMessage: String
-) : Throwable()

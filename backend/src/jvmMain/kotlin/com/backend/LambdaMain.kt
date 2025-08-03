@@ -5,33 +5,13 @@ import com.amazonaws.services.lambda.runtime.RequestHandler
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import com.tetris.model.models.InfoResponseContent
-import com.tetris.model.models.Runtime
 import com.tetris.model.models.SayHelloRequestContent
-import com.tetris.model.models.SayHelloResponseContent
-import kotlinx.datetime.Clock.System as KSystem
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 
 // Lambda handler:
 // com.backend.LambdaMain
 class LambdaMain : RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
-    private fun handleSayHello(input: SayHelloRequestContent): SayHelloResponseContent {
-        if (input.name == "400") {
-            throw ApiError(errorMessage = "Throwing 400 error")
-        }
-        if (input.name == "500") {
-            throw RuntimeException("This is an unmapped error will result in 500")
-        }
-        if (input.name == "time") {
-            return SayHelloResponseContent(
-                message = input.name,
-                runtime = Runtime.JAVA_VIRTUAL_MACHINE,
-                time = KSystem.now()
-            )
-        }
-        return SayHelloResponseContent(message = input.name, runtime = Runtime.JAVA_VIRTUAL_MACHINE)
-    }
 
     private fun handleInfo(): InfoResponseContent =
         InfoResponseContent(
@@ -54,7 +34,7 @@ class LambdaMain : RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyRe
         try {
             val responseBody: String = when (input.requestContext.operationName) {
                 "SayHello" -> Json.encodeToString(
-                    handleSayHello(Json.decodeFromString<SayHelloRequestContent>(input.body))
+                    SayHelloController.handleSayHello(Json.decodeFromString<SayHelloRequestContent>(input.body))
                 )
 
                 "Info" -> Json.encodeToString(handleInfo())
@@ -68,9 +48,3 @@ class LambdaMain : RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyRe
         }
     }
 }
-
-//TODO this type must be manually kept in sync
-@Serializable
-data class ApiError(
-    val errorMessage: String
-) : Throwable()

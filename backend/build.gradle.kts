@@ -48,7 +48,7 @@ kotlin {
                 entryPoint = "com.backend.main"
                 println(target.name)
                 linkerOpts =
-                    if(target.name == "linuxX64" )
+                    if (target.name == "linuxX64")
                         mutableListOf("-Wl,--as-needed") //Drops libcrypt.so.1 which isn't needed
                     else mutableListOf()
             }
@@ -56,6 +56,16 @@ kotlin {
     }
 
     sourceSets {
+        commonMain {
+            dependencies {
+                implementation(project(":ktclient"))
+            }
+        }
+        commonTest {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
         jvmMain {
             dependencies {
                 implementation(project(":ktclient"))
