@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.datetime.Clock.System as KSystem
 
 object SayHelloController {
-    fun handleSayHello(input: SayHelloRequestContent): SayHelloResponseContent {
+    fun handleSayHello(input: SayHelloRequestContent, runtime: Runtime): SayHelloResponseContent {
         if (input.name == "400") {
             throw ApiError(errorMessage = "Throwing 400 error")
         }
@@ -17,11 +17,11 @@ object SayHelloController {
         if (input.name == "time") {
             return SayHelloResponseContent(
                 message = input.name,
-                runtime = Runtime.JAVA_VIRTUAL_MACHINE,
+                runtime = runtime,
                 time = KSystem.now()
             )
         }
-        return SayHelloResponseContent(message = input.name, runtime = Runtime.JAVA_VIRTUAL_MACHINE)
+        return SayHelloResponseContent(message = input.name, runtime = runtime)
     }
 }
 

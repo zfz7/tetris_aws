@@ -5,6 +5,7 @@ import com.amazonaws.services.lambda.runtime.RequestHandler
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import com.tetris.model.models.InfoResponseContent
+import com.tetris.model.models.Runtime
 import com.tetris.model.models.SayHelloRequestContent
 import kotlinx.serialization.json.Json
 
@@ -34,7 +35,10 @@ class LambdaMain : RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyRe
         try {
             val responseBody: String = when (input.requestContext.operationName) {
                 "SayHello" -> Json.encodeToString(
-                    SayHelloController.handleSayHello(Json.decodeFromString<SayHelloRequestContent>(input.body))
+                    SayHelloController.handleSayHello(
+                        input = Json.decodeFromString<SayHelloRequestContent>(input.body),
+                        runtime = Runtime.JAVA_VIRTUAL_MACHINE
+                    )
                 )
 
                 "Info" -> Json.encodeToString(handleInfo())

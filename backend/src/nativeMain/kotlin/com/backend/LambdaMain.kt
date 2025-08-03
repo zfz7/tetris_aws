@@ -2,6 +2,7 @@ package com.backend
 
 import com.backend.apigateway.APIGatewayProxy
 import com.tetris.model.models.InfoResponseContent
+import com.tetris.model.models.Runtime
 import com.tetris.model.models.SayHelloRequestContent
 import io.github.trueangle.knative.lambda.runtime.LambdaRuntime
 import io.github.trueangle.knative.lambda.runtime.api.Context
@@ -41,7 +42,10 @@ class LambdaMain : LambdaBufferedHandler<APIGatewayProxy, APIGatewayV2Response> 
         try {
             val body = when (input.requestContext.operationName) {
                 "SayHello" -> Json.encodeToString(
-                    SayHelloController.handleSayHello(Json.decodeFromString<SayHelloRequestContent>(input.body ?: ""))
+                    SayHelloController.handleSayHello(
+                        input = Json.decodeFromString<SayHelloRequestContent>(input.body ?: ""),
+                        runtime = Runtime.KOTLIN_NATIVE
+                    )
                 )
 
                 "Info" -> Json.encodeToString(handleInfo())

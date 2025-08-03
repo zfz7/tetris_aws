@@ -45,12 +45,14 @@ class LambdaMainTest {
     }
 
     @Test
-    fun handleSayHelloRequestWithTIme() {
+    fun handleSayHelloRequestWithTime() = runTest {
         val result =
-            Json.decodeFromString<SayHelloResponseContent>(subject.handleRequest(APIGatewayProxyRequestEvent().apply {
-                body = "{\"name\":\"time\"}"
-                requestContext = APIGatewayProxyRequestEvent.ProxyRequestContext().apply { operationName = "SayHello" }
-            }, null).body)
+            Json.decodeFromString<SayHelloResponseContent>(
+                subject.handleRequest(
+                    input = createAPIGatewayProxyEvent("{\"name\":\"time\"}", "SayHello"),
+                    context = context
+                ).body!!
+            )
         assertEquals(result.message, "time")
         assertTrue(result.time!!.minus(System.now()) < 10.seconds)
     }
