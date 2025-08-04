@@ -4,7 +4,7 @@ import com.tetris.model.models.Runtime
 import com.tetris.model.models.SayHelloRequestContent
 import com.tetris.model.models.SayHelloResponseContent
 import kotlinx.serialization.Serializable
-import kotlinx.datetime.Clock.System as KSystem
+import kotlin.time.Clock
 
 object SayHelloController {
     fun handleSayHello(input: SayHelloRequestContent, runtime: Runtime): SayHelloResponseContent {
@@ -18,7 +18,7 @@ object SayHelloController {
             return SayHelloResponseContent(
                 message = input.name,
                 runtime = runtime,
-                time = KSystem.now()
+                time = Clock.System.now()
             )
         }
         return SayHelloResponseContent(message = input.name, runtime = runtime)

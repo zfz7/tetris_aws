@@ -1,14 +1,9 @@
-extra["smithyVersion"] = "1.54.0"
 extra["yarnVersion"] = "1.22.19"
 extra["nodeVersion"] = "22.11.0"
-extra["smithyTypeScriptVersion"] = "0.26.0"
 
 plugins {
-    val kotlinVersion = "2.2.0"
     val nodePluginVersion = "7.1.0"
 
-    kotlin("jvm") version kotlinVersion apply false
-    kotlin("kapt") version kotlinVersion apply false
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.kotlinxSerialization) apply false
 

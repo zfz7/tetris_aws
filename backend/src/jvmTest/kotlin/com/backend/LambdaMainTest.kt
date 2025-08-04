@@ -2,12 +2,12 @@ package com.backend
 
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
 import com.tetris.model.models.SayHelloResponseContent
-import kotlinx.datetime.Clock.System
 import kotlinx.serialization.json.Json
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 
 class LambdaMainTest {
@@ -36,7 +36,7 @@ class LambdaMainTest {
             requestContext = APIGatewayProxyRequestEvent.ProxyRequestContext().apply { operationName = "SayHello" }
         }, null).body)
         assertEquals(result.message, "time")
-        assertTrue(result.time!!.minus(System.now()) < 10.seconds)
+        assertTrue(result.time!!.minus(Clock.System.now()) < 10.seconds)
     }
 
     @Test

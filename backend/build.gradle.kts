@@ -69,8 +69,8 @@ kotlin {
         jvmMain {
             dependencies {
                 implementation(project(":ktclient"))
-                implementation("com.amazonaws:aws-lambda-java-events:3.14.0")
-                implementation("com.amazonaws:aws-lambda-java-core:1.2.3")
+                implementation(libs.awsLambdaEvents)
+                implementation(libs.awsLambdaCore)
             }
         }
 
@@ -83,10 +83,13 @@ kotlin {
             dependencies {
                 implementation(project(":ktclient"))
                 implementation(libs.kotlin.serialization.json)
-                implementation("io.github.trueangle:lambda-runtime:0.0.5")
-                implementation("io.github.trueangle:lambda-events:0.0.5")
+                implementation(libs.trueangleLambdaRuntime)
+                implementation(libs.trueangleLambdaEvents)
                 implementation(libs.kotlin.coroutines.test)
             }
+        }
+        sourceSets.all {
+            languageSettings.optIn("kotlin.time.ExperimentalTime")
         }
     }
 }
@@ -102,6 +105,5 @@ tasks.named("generateProjectStructureMetadata") {
 }
 
 tasks.withType<Wrapper> {
-    gradleVersion = "8.12"
     distributionType = Wrapper.DistributionType.BIN
 }

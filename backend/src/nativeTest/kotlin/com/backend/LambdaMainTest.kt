@@ -2,17 +2,17 @@ package com.backend
 
 import com.backend.apigateway.APIGatewayProxy
 import com.backend.apigateway.APIGatewayProxy.ProxyRequestContext
+import com.tetris.model.models.SayHelloResponseContent
 import io.github.trueangle.knative.lambda.runtime.api.Context
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.Json
 import platform.posix.setenv
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
-import com.tetris.model.models.SayHelloResponseContent
-import kotlinx.datetime.Clock.System
-import kotlinx.serialization.json.Json
 
 class LambdaMainTest {
     private lateinit var subject: LambdaMain
@@ -54,7 +54,7 @@ class LambdaMainTest {
                 ).body!!
             )
         assertEquals(result.message, "time")
-        assertTrue(result.time!!.minus(System.now()) < 10.seconds)
+        assertTrue(result.time!!.minus(Clock.System.now()) < 10.seconds)
     }
 
     @Test

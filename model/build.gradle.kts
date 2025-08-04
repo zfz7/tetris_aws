@@ -1,7 +1,7 @@
 plugins {
     kotlin("jvm")
-    id("software.amazon.smithy.gradle.smithy-jar").version("1.2.0")
-    id("org.openapi.generator") version "7.11.0"
+    alias(libs.plugins.smithyJar)
+    alias(libs.plugins.openapiGenerator)
 }
 
 repositories {
@@ -9,18 +9,18 @@ repositories {
 }
 
 dependencies {
-    implementation("software.amazon.smithy.typescript:smithy-typescript-codegen:${rootProject.extra["smithyTypeScriptVersion"]}")
+    implementation(libs.smithyTypescriptCodegen)
 }
 
 smithy {
     smithyBuildConfigs = files("smithy-build.json")
     dependencies {
-        implementation("software.amazon.smithy.typescript:smithy-aws-typescript-codegen:${rootProject.extra["smithyTypeScriptVersion"]}")
-        implementation("software.amazon.smithy:smithy-openapi:${rootProject.extra["smithyVersion"]}")
-        implementation("software.amazon.smithy:smithy-model:${rootProject.extra["smithyVersion"]}")
-        implementation("software.amazon.smithy:smithy-aws-traits:${rootProject.extra["smithyVersion"]}")
-        implementation("software.amazon.smithy:smithy-aws-apigateway-openapi:${rootProject.extra["smithyVersion"]}")
-        implementation("software.amazon.smithy:smithy-cli:${rootProject.extra["smithyVersion"]}")
+        implementation(libs.smithyAwsTypescriptCodegen)
+        implementation(libs.smithyOpenapi)
+        implementation(libs.smithyModel)
+        implementation(libs.smithyAwsTraits)
+        implementation(libs.smithyAwsApigatewayOpenapi)
+        implementation(libs.smithyCli)
     }
 }
 
@@ -32,14 +32,16 @@ openApiGenerate {
     typeMappings.put("string+date-time", "Instant")
     importMappings.putAll(
         mapOf(
-            "Instant" to "kotlinx.datetime.Instant",
+            "Instant" to "kotlin.time.Instant",
             "File" to "OctetByteArray",
         )
     )
-    configOptions.set(mapOf(
-        "artifactId" to "ktclient",
-        "omitGradleWrapper" to "true"
-    ))
+    configOptions.set(
+        mapOf(
+            "artifactId" to "ktclient",
+            "omitGradleWrapper" to "true"
+        )
+    )
     additionalProperties.set(
         mapOf(
             "library" to "multiplatform",

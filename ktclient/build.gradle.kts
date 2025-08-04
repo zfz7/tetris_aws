@@ -55,7 +55,7 @@ kotlin {
 
         all {
             languageSettings.apply {
-                optIn("kotlin.Experimental")
+                optIn("kotlin.time.ExperimentalTime")
             }
         }
     }
